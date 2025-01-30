@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -40,7 +41,9 @@ public class UserService {
                     .role(Role.ROLE_USER)
                     .email(createUserDTO.email())
                     .description(createUserDTO.desctiprion())
+
                     .build();
+
             return userRepository.save(user);
         } else {
             log.error("Password : {} , Password Confirmation: {}", createUserDTO.password(), createUserDTO.passwordConfirmation());

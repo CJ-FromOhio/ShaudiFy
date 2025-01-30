@@ -1,25 +1,40 @@
 package hezix.org.shaudifydemo1.entity.user;
 
-import hezix.org.shaudifydemo1.entity.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User extends BaseEntity {
+@Table(name = "users")
+public class User{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    Long id;
+    @Column(name = "username")
     private String username;
+    @Column(name = "password")
     private String password;
+    @Column(name = "description")
     private String description;
+    @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private Role role;
+    @Column(name = "email")
     private String email;
+    @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm")
+    @Column(name = "created_at")
+    Date createdAt;
+    @Column(name = "created_by")
+    String createdBy;
 
 }
