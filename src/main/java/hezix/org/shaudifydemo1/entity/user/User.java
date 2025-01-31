@@ -1,5 +1,7 @@
 package hezix.org.shaudifydemo1.entity.user;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import hezix.org.shaudifydemo1.entity.song.Song;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,7 +9,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
@@ -33,8 +37,10 @@ public class User{
     private String email;
     @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm")
     @Column(name = "created_at")
-    Date createdAt;
+    private LocalDateTime createdAt;
     @Column(name = "created_by")
-    String createdBy;
-
+    private String createdBy;
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    private List<Song> authoredSongs;
 }

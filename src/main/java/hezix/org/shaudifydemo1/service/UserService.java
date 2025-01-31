@@ -1,10 +1,12 @@
 package hezix.org.shaudifydemo1.service;
 
+import hezix.org.shaudifydemo1.entity.song.Song;
 import hezix.org.shaudifydemo1.entity.user.Role;
 import hezix.org.shaudifydemo1.entity.user.User;
 import hezix.org.shaudifydemo1.entity.user.dto.CreateUserDTO;
 import hezix.org.shaudifydemo1.exception.PasswordAndPasswordConfirmationNotEquals;
 import hezix.org.shaudifydemo1.exception.EntityNotFoundException;
+import hezix.org.shaudifydemo1.mapper.UserMapper;
 import hezix.org.shaudifydemo1.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,10 +23,16 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final SongService songService;
+    private final UserMapper userMapper;
 
     @Transactional(readOnly = true)
     public User findUserById(Long id) {
         return userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found by id: " + id));
+    }
+
+    @Transactional(readOnly = true)
+    public User findUserByUsername(String username) {
+        return userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException("User not found by username: " + username));
     }
 
     @Transactional(readOnly = true)
@@ -34,19 +42,14 @@ public class UserService {
 
     @Transactional
     public User save(CreateUserDTO createUserDTO) {
-        if (createUserDTO.password().equals(createUserDTO.passwordConfirmation())) {
-            User user = User.builder()
-                    .username(createUserDTO.username())
-                    .password(createUserDTO.password())
-                    .role(Role.ROLE_USER)
-                    .email(createUserDTO.email())
-                    .description(createUserDTO.desctiprion())
-
-                    .build();
+        if (createUserDTO.getPassword().equals(createUserDTO.getPasswordConfirmation())) {
+            User user = userMapper.toEntity(createUserDTO);
+            user.setRole(Role.ROLE_USER);
+            user.setCreatedAt(LocalDateTime.now());
 
             return userRepository.save(user);
         } else {
-            log.error("Password : {} , Password Confirmation: {}", createUserDTO.password(), createUserDTO.passwordConfirmation());
+            log.error("Password : {} , Password Confirmation: {}", createUserDTO.getPassword(), createUserDTO.getPasswordConfirmation());
             throw new PasswordAndPasswordConfirmationNotEquals("Password and password confirmation cannot be same");
         }
     }
@@ -58,6 +61,21 @@ public class UserService {
 
     @Transactional
     public void delete(Long id) {
-        userRepository.deleteById(id);
+        if(userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+        } else {
+            throw new EntityNotFoundException("User for delete not found by id: " + id);
+        }
+    }
+    @Transactional
+    public User assignSong(Long songId, Long userId) {
+        User user = findUserById(userId);
+        List<Song> list = user.getAuthoredSongs();
+        Song song = songService.findById(songId);
+        song.setUser(user);
+        song.setCreatedBy(user.getUsername());
+        list.add(song);
+        user.setAuthoredSongs(list);
+        return user;
     }
 }

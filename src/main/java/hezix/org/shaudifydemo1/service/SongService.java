@@ -1,6 +1,8 @@
 package hezix.org.shaudifydemo1.service;
 
 import hezix.org.shaudifydemo1.entity.song.Song;
+import hezix.org.shaudifydemo1.entity.song.dto.CreateSongDTO;
+import hezix.org.shaudifydemo1.mapper.SongMapper;
 import hezix.org.shaudifydemo1.repository.SongRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +15,10 @@ import java.util.List;
 public class SongService {
 
     private final SongRepository songRepository;
+    private final SongMapper songMapper;
 
-    public Song save(Song song) {
+    public Song save(CreateSongDTO createSongDTO) {
+        Song song = songMapper.toEntity(createSongDTO);
         return songRepository.save(song);
     }
     public List<Song> findAll() {
@@ -27,5 +31,6 @@ public class SongService {
     public void delete(Long id) {
         songRepository.deleteById(id);
     }
+
 
 }

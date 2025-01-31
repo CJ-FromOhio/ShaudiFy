@@ -11,12 +11,13 @@ CREATE TABLE IF NOT EXISTS users
     created_by varchar(32)
 );
 --changelog hezix:2
-CREATE TABLE IF NOT EXISTS company
+CREATE TABLE IF NOT EXISTS songs
 (
     id BIGSERIAL primary key ,
     title varchar(32) not null,
     description varchar(255) ,
     type varchar(16),
+    author_id INT REFERENCES users(id),
     created_at timestamp not null,
     created_by varchar(32)
 );
