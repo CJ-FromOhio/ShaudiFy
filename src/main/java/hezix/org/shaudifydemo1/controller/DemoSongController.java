@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/song")
 @RequiredArgsConstructor
@@ -24,5 +26,12 @@ public class DemoSongController {
     public ResponseEntity<Song> get(@PathVariable Long id) {
         return ResponseEntity.ok().body(songService.findById(id));
     }
-
+    @GetMapping("/{userId}/song/{songId}")
+    public ResponseEntity<User> assignSong(@PathVariable("userId") Long userId, @PathVariable("songId") Long songId) {
+        return ResponseEntity.ok().body(songService.assignSong(songId, userId));
+    }
+    @GetMapping()
+    public ResponseEntity<List<Song>> getAll() {
+        return ResponseEntity.ok().body(songService.findAll());
+    }
 }

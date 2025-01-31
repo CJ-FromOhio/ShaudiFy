@@ -1,4 +1,13 @@
 spring:
+  cache:
+    type: redis
+    cache-names: redis-cache
+    password: RVFjc2FjYUlXU1VHQldRWSo=
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password:
   datasource:
     url: jdbc:postgresql://localhost:5432/shaudify
     password: pass
@@ -6,4 +15,12 @@ spring:
   liquibase:
     enabled: true
     change-log: classpath:/db/changelog/db.changelog-master.yaml
+  jpa:
+    show-sql: true
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+
 
