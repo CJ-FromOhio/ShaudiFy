@@ -25,7 +25,7 @@ public class Song implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    Long id;
+    private Long id;
     @Column(name = "title")
     private String title;
     @Column(name = "description")
@@ -35,9 +35,9 @@ public class Song implements Serializable {
     private SongType type;
     @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm")
     @Column(name = "created_at")
-    LocalDateTime createdAt;
+    private LocalDateTime createdAt;
     @Column(name = "created_by")
-    String createdBy;
+    private String createdBy;
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "author_id")
     @JsonBackReference

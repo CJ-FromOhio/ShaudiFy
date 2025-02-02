@@ -23,9 +23,9 @@ public class SongService {
     private final SongRepository songRepository;
     private final UserService userService;
     private final SongMapper songMapper;
-    @Caching(cacheable = {
-            @Cacheable(value = "SongService::findById", key = "#song.id"),
-    })
+
+
+    @Transactional
     public Song save(CreateSongDTO createSongDTO) {
         Song song = songMapper.toEntity(createSongDTO);
         return songRepository.save(song);
@@ -35,15 +35,14 @@ public class SongService {
         return songRepository.findAll();
     }
     @Transactional(readOnly = true)
-    @Cacheable(value = "SongService::findById", key = "#id")
     public Song findById(Long id) {
         return songRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Song not found by id: " + id));
     }
-    @CacheEvict(value = "SongService::getById", key = "#id")
+
+    @Transactional
     public void delete(Long id) {
         songRepository.deleteById(id);
     }
-    @Cacheable(value = "SongService::assignSong", key = "#songId + '.' + #userId")
     @Transactional
     public User assignSong(Long songId, Long userId) {
         User user = userService.findUserById(userId);

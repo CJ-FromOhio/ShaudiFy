@@ -30,27 +30,20 @@ public class UserService {
     private final UserMapper userMapper;
 
     @Transactional(readOnly = true)
-    @Cacheable(value = "UserService::findUserById", key = "#id")
     public User findUserById(Long id) {
         return userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found by id: " + id));
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(value = "UserService::findUserByUsername", key = "#username")
     public User findUserByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException("User not found by username: " + username));
     }
-    @Cacheable(value = "UserService::findAllUsers" )
     @Transactional(readOnly = true)
     public List<User> findAllUsers() {
         return userRepository.findAll();
     }
 
     @Transactional
-    @Caching(cacheable = {
-            @Cacheable(value = "UserService::findUserById", key = "#user.id"),
-            @Cacheable(value = "UserService::findUserByUsername", key = "#user.username"),
-    })
     public User save(CreateUserDTO createUserDTO) {
         if (createUserDTO.getPassword().equals(createUserDTO.getPasswordConfirmation())) {
             User user = userMapper.toEntity(createUserDTO);
@@ -63,17 +56,12 @@ public class UserService {
             throw new PasswordAndPasswordConfirmationNotEquals("Password and password confirmation cannot be same");
         }
     }
-    @Caching(put = {
-            @CachePut(value = "UserService::findUserById", key = "#user.id"),
-            @CachePut(value = "UserService::findUserByUsername", key = "#user.username"),
-    })
     @Transactional
     public User update(User user) {
         return userRepository.save(user);
     }
 
     @Transactional
-    @CacheEvict(value = "UserService::findUserById", key = "#id")
     public void delete(Long id) {
         if(userRepository.existsById(id)) {
             userRepository.deleteById(id);

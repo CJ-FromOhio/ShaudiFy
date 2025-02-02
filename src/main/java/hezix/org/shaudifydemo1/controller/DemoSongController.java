@@ -26,7 +26,7 @@ public class DemoSongController {
     public ResponseEntity<Song> get(@PathVariable Long id) {
         return ResponseEntity.ok().body(songService.findById(id));
     }
-    @GetMapping("/{userId}/song/{songId}")
+    @GetMapping("/{songId}/assign/{songId}")
     public ResponseEntity<User> assignSong(@PathVariable("userId") Long userId, @PathVariable("songId") Long songId) {
         return ResponseEntity.ok().body(songService.assignSong(songId, userId));
     }
