@@ -2,6 +2,7 @@ package hezix.org.shaudifydemo1.controller;
 
 import hezix.org.shaudifydemo1.entity.user.User;
 import hezix.org.shaudifydemo1.entity.user.dto.CreateUserDTO;
+import hezix.org.shaudifydemo1.entity.user.dto.ReadUserDTO;
 import hezix.org.shaudifydemo1.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class DemoUserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> get(@PathVariable Long id) {
+    public ResponseEntity<ReadUserDTO> get(@PathVariable Long id) {
         return ResponseEntity.ok().body(userService.findUserById(id));
     }
 

@@ -2,12 +2,11 @@ spring:
   cache:
     type: redis
     cache-names: redis-cache
-    password: RVFjc2FjYUlXU1VHQldRWSo=
   data:
     redis:
-      host: localhost
+      host: redis
       port: 6379
-      password:
+      password: RVFjc2FjYUlXU1VHQldRWSo=
   datasource:
     url: jdbc:postgresql://localhost:5432/shaudify
     password: pass

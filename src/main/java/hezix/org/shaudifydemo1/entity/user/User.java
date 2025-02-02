@@ -41,7 +41,7 @@ public class User implements Serializable {
     private LocalDateTime createdAt;
     @Column(name = "created_by")
     private String createdBy;
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     @JsonManagedReference
     private List<Song> authoredSongs;
 }
