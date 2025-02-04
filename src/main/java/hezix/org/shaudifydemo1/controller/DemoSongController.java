@@ -2,8 +2,10 @@ package hezix.org.shaudifydemo1.controller;
 
 import hezix.org.shaudifydemo1.entity.song.Song;
 import hezix.org.shaudifydemo1.entity.song.dto.CreateSongDTO;
+import hezix.org.shaudifydemo1.entity.song.dto.ReadSongDTO;
 import hezix.org.shaudifydemo1.entity.user.User;
 import hezix.org.shaudifydemo1.entity.user.dto.CreateUserDTO;
+import hezix.org.shaudifydemo1.entity.user.dto.ReadUserDTO;
 import hezix.org.shaudifydemo1.service.SongService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,15 +25,15 @@ public class DemoSongController {
         return ResponseEntity.ok().body(songService.save(createUserDTO));
     }
     @GetMapping("/{id}")
-    public ResponseEntity<Song> get(@PathVariable Long id) {
+    public ResponseEntity<ReadSongDTO> get(@PathVariable Long id) {
         return ResponseEntity.ok().body(songService.findById(id));
     }
     @GetMapping("/{userId}/song/{songId}")
-    public ResponseEntity<User> assignSong(@PathVariable("userId") Long userId, @PathVariable("songId") Long songId) {
+    public ResponseEntity<ReadUserDTO> assignSong(@PathVariable("userId") Long userId, @PathVariable("songId") Long songId) {
         return ResponseEntity.ok().body(songService.assignSong(songId, userId));
     }
     @GetMapping()
-    public ResponseEntity<List<Song>> getAll() {
+    public ResponseEntity<List<ReadSongDTO>> getAll() {
         return ResponseEntity.ok().body(songService.findAll());
     }
 }

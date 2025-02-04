@@ -2,7 +2,11 @@ package hezix.org.shaudifydemo1.service;
 
 import hezix.org.shaudifydemo1.entity.song.Song;
 import hezix.org.shaudifydemo1.entity.song.dto.CreateSongDTO;
+import hezix.org.shaudifydemo1.entity.song.dto.ReadSongDTO;
 import hezix.org.shaudifydemo1.entity.user.User;
+import hezix.org.shaudifydemo1.entity.user.dto.ReadUserDTO;
+import hezix.org.shaudifydemo1.mapper.ReadSongMapper;
+import hezix.org.shaudifydemo1.mapper.ReadUserMapper;
 import hezix.org.shaudifydemo1.mapper.SongMapper;
 import hezix.org.shaudifydemo1.repository.SongRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -16,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +29,8 @@ public class SongService {
     private final SongRepository songRepository;
     private final UserService userService;
     private final SongMapper songMapper;
+    private final ReadSongMapper readSongMapper;
+    private final ReadUserMapper readUserMapper;
 
     @Transactional
     public Song save(CreateSongDTO createSongDTO) {
@@ -32,13 +39,23 @@ public class SongService {
     }
 
     @Transactional(readOnly = true)
-    public List<Song> findAll() {
-        return songRepository.findAll();
+    public List<ReadSongDTO> findAll() {
+        List<ReadSongDTO> list = songRepository.findAll().stream()
+                .map(readSongMapper::toDto)
+                .toList();
+        return list;
     }
 
     @Transactional(readOnly = true)
     @Cacheable(value = "SongService::findById", key = "#id")
-    public Song findById(Long id) {
+    public ReadSongDTO findById(Long id) {
+        ReadSongDTO readSongDTO = readSongMapper
+                .toDto(songRepository.findById(id)
+                        .orElseThrow(() -> new EntityNotFoundException("Song not found by id: " + id)));
+        return readSongDTO;
+    }
+    @Transactional(readOnly = true)
+    public Song findSongEntityById(Long id) {
         return songRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Song not found by id: " + id));
     }
     @Transactional
@@ -47,17 +64,12 @@ public class SongService {
         songRepository.deleteById(id);
     }
 
-    @CacheEvict(value = "SongService::assignSong", key = "#songId + '.' + #userId")
     @Transactional
-    public User assignSong(Long songId, Long userId) {
-        User user = userService.findUserEntityById(userId);
-        Hibernate.initialize(user.getAuthoredSongs());
-        List<Song> list = user.getAuthoredSongs();
-        Song song = findById(songId);
-        song.setUser(user);
-        song.setCreatedBy(user.getUsername());
-        list.add(song);
-        user.setAuthoredSongs(list);
-        return user;
+    public ReadUserDTO assignSong(Long songId, Long userId) {
+            User user = userService.findUserEntityById(userId);
+            Song song = findSongEntityById(songId);
+            song.setUser(user);
+            user.getAuthoredSongs().add(song);
+        return readUserMapper.toDto(user);
     }
 }

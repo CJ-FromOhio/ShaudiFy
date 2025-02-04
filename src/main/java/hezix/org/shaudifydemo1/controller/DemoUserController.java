@@ -28,12 +28,12 @@ public class DemoUserController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<User>> getAll() {
+    public ResponseEntity<List<ReadUserDTO>> getAll() {
         return ResponseEntity.ok().body(userService.findAllUsers());
     }
 
     @DeleteMapping("/{id}/delete")
-    public ResponseEntity delete(@PathVariable Long id) {
+    public ResponseEntity<String> delete(@PathVariable Long id) {
         userService.delete(id);
         return ResponseEntity.ok().body("User deleted by id: " + id);
     }

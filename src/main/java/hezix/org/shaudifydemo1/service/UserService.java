@@ -8,6 +8,8 @@ import hezix.org.shaudifydemo1.entity.user.dto.CreateUserDTO;
 import hezix.org.shaudifydemo1.entity.user.dto.ReadUserDTO;
 import hezix.org.shaudifydemo1.exception.PasswordAndPasswordConfirmationNotEquals;
 import hezix.org.shaudifydemo1.exception.EntityNotFoundException;
+import hezix.org.shaudifydemo1.mapper.ReadSongMapper;
+import hezix.org.shaudifydemo1.mapper.ReadUserMapper;
 import hezix.org.shaudifydemo1.mapper.UserMapper;
 import hezix.org.shaudifydemo1.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,26 +34,21 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final ReadSongMapper readSongMapper;
+    private final ReadUserMapper readUserMapper;
 
     @Transactional(readOnly = true)
-//    @Cacheable(value = "UserService::getById", key = "#id")
+    @Cacheable(value = "UserService::getById", key = "#id")
     public ReadUserDTO findUserById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found by id: " + id));
         List<ReadSongDTO> songs = user.getAuthoredSongs()
                 .stream()
-                .map(song -> ReadSongDTO.builder()
-                        .title(song.getTitle())
-                        .description(song.getDescription())
-                        .id(song.getId())
-                        .build())
+                .map(readSongMapper::toDto)
                 .toList();
-
-        return ReadUserDTO.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .authoredSongs(songs)
-                .build();
+        ReadUserDTO readUserDTO = readUserMapper.toDto(user);
+        readUserDTO.setAuthoredSongs(songs);
+        return readUserDTO;
     }
     @Transactional(readOnly = true)
     public User findUserEntityById(Long id) {
@@ -59,13 +57,24 @@ public class UserService {
     }
     @Cacheable(value = "UserService::getByUsername", key = "#username")
     @Transactional(readOnly = true)
-    public User findUserByUsername(String username) {
-        return userRepository.findByUsername(username)
+    public ReadUserDTO findUserByUsername(String username) {
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException("User not found by username: " + username));
+        List<ReadSongDTO> songs = user.getAuthoredSongs()
+                .stream()
+                .map(readSongMapper::toDto)
+                .toList();
+        ReadUserDTO readUserDTO = readUserMapper.toDto(user);
+        readUserDTO.setAuthoredSongs(songs);
+        return readUserDTO;
     }
     @Transactional(readOnly = true)
-    public List<User> findAllUsers() {
-        return userRepository.findAll();
+    public List<ReadUserDTO> findAllUsers() {
+        List<ReadUserDTO> list = userRepository.findAll()
+                .stream()
+                .map(readUserMapper::toDto)
+                .toList();
+        return list;
     }
 
     @Transactional
