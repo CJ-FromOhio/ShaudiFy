@@ -35,6 +35,7 @@ public class ReadUserMapper implements Mapper<ReadUserDTO, User> {
                 .username(user.getUsername())
                 .email(user.getEmail())
                 .role(user.getRole())
+                .password(user.getPassword())
                 .createdAt(user.getCreatedAt())
                 .description(user.getDescription())
                 .authoredSongs(user.getAuthoredSongs().stream()

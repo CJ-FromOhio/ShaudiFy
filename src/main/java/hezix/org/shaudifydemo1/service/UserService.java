@@ -1,11 +1,15 @@
 package hezix.org.shaudifydemo1.service;
 
 import hezix.org.shaudifydemo1.entity.song.Song;
+import hezix.org.shaudifydemo1.entity.song.dto.ReadSongDTO;
 import hezix.org.shaudifydemo1.entity.user.Role;
 import hezix.org.shaudifydemo1.entity.user.User;
 import hezix.org.shaudifydemo1.entity.user.dto.CreateUserDTO;
+import hezix.org.shaudifydemo1.entity.user.dto.ReadUserDTO;
 import hezix.org.shaudifydemo1.exception.PasswordAndPasswordConfirmationNotEquals;
 import hezix.org.shaudifydemo1.exception.EntityNotFoundException;
+import hezix.org.shaudifydemo1.mapper.ReadSongMapper;
+import hezix.org.shaudifydemo1.mapper.ReadUserMapper;
 import hezix.org.shaudifydemo1.mapper.UserMapper;
 import hezix.org.shaudifydemo1.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,29 +32,50 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final ReadSongMapper readSongMapper;
+    private final ReadUserMapper readUserMapper;
 
     @Transactional(readOnly = true)
-    @Cacheable(value = "UserService::findUserById", key = "#id")
-    public User findUserById(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found by id: " + id));
+    @Cacheable(value = "UserService::getById", key = "#id")
+    public ReadUserDTO findUserById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found by id: " + id));
+        List<ReadSongDTO> songs = user.getAuthoredSongs()
+                .stream()
+                .map(readSongMapper::toDto)
+                .toList();
+        ReadUserDTO readUserDTO = readUserMapper.toDto(user);
+        readUserDTO.setAuthoredSongs(songs);
+        return readUserDTO;
     }
-
     @Transactional(readOnly = true)
-    @Cacheable(value = "UserService::findUserByUsername", key = "#username")
-    public User findUserByUsername(String username) {
-        return userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException("User not found by username: " + username));
+    public User findUserEntityById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found by id: " + id));
     }
-    @Cacheable(value = "UserService::findAllUsers" )
+    @Cacheable(value = "UserService::getByUsername", key = "#username")
     @Transactional(readOnly = true)
-    public List<User> findAllUsers() {
-        return userRepository.findAll();
+    public ReadUserDTO findUserByUsername(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("User not found by username: " + username));
+        List<ReadSongDTO> songs = user.getAuthoredSongs()
+                .stream()
+                .map(readSongMapper::toDto)
+                .toList();
+        ReadUserDTO readUserDTO = readUserMapper.toDto(user);
+        readUserDTO.setAuthoredSongs(songs);
+        return readUserDTO;
+    }
+    @Transactional(readOnly = true)
+    public List<ReadUserDTO> findAllUsers() {
+        List<ReadUserDTO> list = userRepository.findAll()
+                .stream()
+                .map(readUserMapper::toDto)
+                .toList();
+        return list;
     }
 
     @Transactional
-    @Caching(cacheable = {
-            @Cacheable(value = "UserService::findUserById", key = "#user.id"),
-            @Cacheable(value = "UserService::findUserByUsername", key = "#user.username"),
-    })
     public User save(CreateUserDTO createUserDTO) {
         if (createUserDTO.getPassword().equals(createUserDTO.getPasswordConfirmation())) {
             User user = userMapper.toEntity(createUserDTO);
@@ -63,17 +88,17 @@ public class UserService {
             throw new PasswordAndPasswordConfirmationNotEquals("Password and password confirmation cannot be same");
         }
     }
-    @Caching(put = {
-            @CachePut(value = "UserService::findUserById", key = "#user.id"),
-            @CachePut(value = "UserService::findUserByUsername", key = "#user.username"),
-    })
     @Transactional
+    @Caching(put = {
+            @CachePut(value = "UserService::getById", key = "#user.id"),
+            @CachePut(value = "UserService::getByUsername", key = "#user.username"),
+    })
     public User update(User user) {
         return userRepository.save(user);
     }
 
     @Transactional
-    @CacheEvict(value = "UserService::findUserById", key = "#id")
+    @CacheEvict(value = "UserService::getById", key = "#id")
     public void delete(Long id) {
         if(userRepository.existsById(id)) {
             userRepository.deleteById(id);
