@@ -24,7 +24,7 @@ public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    Long id;
     @Column(name = "username")
     private String username;
     @Column(name = "password")
@@ -41,7 +41,7 @@ public class User implements Serializable {
     private LocalDateTime createdAt;
     @Column(name = "created_by")
     private String createdBy;
-    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user")
     @JsonManagedReference
     private List<Song> authoredSongs;
 }

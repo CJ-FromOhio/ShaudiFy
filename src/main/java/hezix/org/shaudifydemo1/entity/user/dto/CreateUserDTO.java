@@ -11,6 +11,7 @@ import org.springframework.data.annotation.AccessType;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateUserDTO {
+    private Long id;
     private String username;
     private String password;
     private String passwordConfirmation;
