@@ -1,6 +1,5 @@
 package hezix.org.shaudifydemo1.service;
 
-import hezix.org.shaudifydemo1.entity.song.Song;
 import hezix.org.shaudifydemo1.entity.song.dto.ReadSongDTO;
 import hezix.org.shaudifydemo1.entity.user.Role;
 import hezix.org.shaudifydemo1.entity.user.User;
@@ -18,7 +17,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -68,11 +66,11 @@ public class UserService {
     }
     @Transactional(readOnly = true)
     public List<ReadUserDTO> findAllUsers() {
-        List<ReadUserDTO> list = userRepository.findAll()
+        List<ReadUserDTO> arr = userRepository.findAll()
                 .stream()
                 .map(readUserMapper::toDto)
                 .toList();
-        return list;
+        return arr;
     }
 
     @Transactional

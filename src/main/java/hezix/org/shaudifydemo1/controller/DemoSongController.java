@@ -3,8 +3,6 @@ package hezix.org.shaudifydemo1.controller;
 import hezix.org.shaudifydemo1.entity.song.Song;
 import hezix.org.shaudifydemo1.entity.song.dto.CreateSongDTO;
 import hezix.org.shaudifydemo1.entity.song.dto.ReadSongDTO;
-import hezix.org.shaudifydemo1.entity.user.User;
-import hezix.org.shaudifydemo1.entity.user.dto.CreateUserDTO;
 import hezix.org.shaudifydemo1.entity.user.dto.ReadUserDTO;
 import hezix.org.shaudifydemo1.service.SongService;
 import lombok.RequiredArgsConstructor;

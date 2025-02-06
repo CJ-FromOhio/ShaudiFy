@@ -3,9 +3,6 @@ package hezix.org.shaudifydemo1.mapper;
 import hezix.org.shaudifydemo1.entity.song.Song;
 import hezix.org.shaudifydemo1.entity.song.SongType;
 import hezix.org.shaudifydemo1.entity.song.dto.CreateSongDTO;
-import hezix.org.shaudifydemo1.entity.user.Role;
-import hezix.org.shaudifydemo1.entity.user.User;
-import hezix.org.shaudifydemo1.entity.user.dto.CreateUserDTO;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;

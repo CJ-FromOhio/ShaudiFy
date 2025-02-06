@@ -1,14 +1,10 @@
 package hezix.org.shaudifydemo1.mapper;
 
-import hezix.org.shaudifydemo1.entity.song.Song;
-import hezix.org.shaudifydemo1.entity.song.dto.ReadSongDTO;
 import hezix.org.shaudifydemo1.entity.user.User;
 import hezix.org.shaudifydemo1.entity.user.dto.ReadUserDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Component

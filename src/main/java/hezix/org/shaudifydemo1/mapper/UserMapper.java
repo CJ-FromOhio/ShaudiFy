@@ -3,7 +3,6 @@ package hezix.org.shaudifydemo1.mapper;
 import hezix.org.shaudifydemo1.entity.user.Role;
 import hezix.org.shaudifydemo1.entity.user.User;
 import hezix.org.shaudifydemo1.entity.user.dto.CreateUserDTO;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
