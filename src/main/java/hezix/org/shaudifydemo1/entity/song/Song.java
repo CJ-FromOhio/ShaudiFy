@@ -40,4 +40,6 @@ public class Song implements Serializable {
     @JoinColumn(name = "author_id")
     @JsonBackReference
     private User user;
+    @Column(name = "image")
+    private String image;
 }

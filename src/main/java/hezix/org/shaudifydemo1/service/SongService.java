@@ -1,6 +1,7 @@
 package hezix.org.shaudifydemo1.service;
 
 import hezix.org.shaudifydemo1.entity.song.Song;
+import hezix.org.shaudifydemo1.entity.song.SongFile;
 import hezix.org.shaudifydemo1.entity.song.dto.CreateSongDTO;
 import hezix.org.shaudifydemo1.entity.song.dto.ReadSongDTO;
 import hezix.org.shaudifydemo1.entity.user.User;
@@ -27,6 +28,7 @@ public class SongService {
     private final SongMapper songMapper;
     private final ReadSongMapper readSongMapper;
     private final ReadUserMapper readUserMapper;
+    private final ImageService imageService;
 
     @Transactional
     public Song save(CreateSongDTO createSongDTO) {
@@ -36,18 +38,18 @@ public class SongService {
 
     @Transactional(readOnly = true)
     public List<ReadSongDTO> findAll() {
-        List<ReadSongDTO> list = songRepository.findAll().stream()
+        return songRepository.findAll().stream()
                 .map(readSongMapper::toDto)
                 .toList();
-        return list;
     }
 
     @Transactional(readOnly = true)
     @Cacheable(value = "SongService::findById", key = "#id")
     public ReadSongDTO findById(Long id) {
+        Song song = songRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Song not found by id: " + id));
         ReadSongDTO readSongDTO = readSongMapper
-                .toDto(songRepository.findById(id)
-                        .orElseThrow(() -> new EntityNotFoundException("Song not found by id: " + id)));
+                .toDto(song);
         return readSongDTO;
     }
     @Transactional(readOnly = true)
@@ -67,5 +69,13 @@ public class SongService {
         song.setUser(user);
         user.getAuthoredSongs().add(song);
         return readUserMapper.toDto(user);
+    }
+    @CacheEvict(value = "SongService::getById", key = "#id")
+    @Transactional
+    public void uploadImage(Long id, SongFile image) {
+        Song song = findSongEntityById(id);
+        String filename = imageService.upload(image);
+        song.setImage(filename);
+        songRepository.save(song);
     }
 }

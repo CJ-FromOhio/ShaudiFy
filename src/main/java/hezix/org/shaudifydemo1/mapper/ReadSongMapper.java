@@ -21,6 +21,7 @@ public class ReadSongMapper implements Mapper<ReadSongDTO, Song> {
                 .id(song.getId())
                 .title(song.getTitle())
                 .description(song.getDescription())
+                .image(song.getImage())
                 .build();
     }
 }

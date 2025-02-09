@@ -26,6 +26,7 @@ public class SongMapper implements Mapper<CreateSongDTO, Song> {
         return CreateSongDTO.builder()
                 .title(song.getTitle())
                 .description(song.getDescription())
+                .image(song.getImage())
                 .build();
     }
 }
