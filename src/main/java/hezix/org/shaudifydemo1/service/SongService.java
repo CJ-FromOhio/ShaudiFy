@@ -53,6 +53,11 @@ public class SongService {
         return readSongDTO;
     }
     @Transactional(readOnly = true)
+    @Cacheable(value = "SongService::findImageById", key = "#id")
+    public String findImageById(Long id) {
+        return songRepository.findImageById(id).orElseThrow(() -> new EntityNotFoundException("Song image not found by id: " + id));
+    }
+    @Transactional(readOnly = true)
     public Song findSongEntityById(Long id) {
         return songRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Song not found by id: " + id));
     }
@@ -70,7 +75,7 @@ public class SongService {
         user.getAuthoredSongs().add(song);
         return readUserMapper.toDto(user);
     }
-    @CacheEvict(value = "SongService::getById", key = "#id")
+//    @Cacheable(value = "SongService::findById", key = "#id")
     @Transactional
     public void uploadImage(Long id, SongFile image) {
         Song song = findSongEntityById(id);

@@ -9,17 +9,15 @@ import hezix.org.shaudifydemo1.entity.user.dto.ReadUserDTO;
 import hezix.org.shaudifydemo1.mapper.SongFileMapper;
 import hezix.org.shaudifydemo1.service.SongService;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.lang.annotation.DeclareError;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/song")
 @RequiredArgsConstructor
-public class DemoSongController {
+public class DemoRestSongController {
 
     private final SongService songService;
     private final SongFileMapper songFileMapper;
@@ -54,5 +52,9 @@ public class DemoSongController {
     public ResponseEntity<String> delete(@PathVariable Long id) {
         songService.delete(id);
         return ResponseEntity.ok().body("Deleted Song by id: " + id);
+    }
+    @GetMapping("/{id}/image")
+    public ResponseEntity<String> readImage(@PathVariable Long id) {
+        return ResponseEntity.ok().body(songService.findImageById(id));
     }
 }
