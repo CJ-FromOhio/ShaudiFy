@@ -18,7 +18,7 @@ public class DemoRestUserController {
     private final UserService userService;
 
     @PostMapping("/create")
-    public ResponseEntity<User> create(@RequestBody CreateUserDTO createUserDTO) {
+    public ResponseEntity<ReadUserDTO> create(@RequestBody CreateUserDTO createUserDTO) {
         return ResponseEntity.ok().body(userService.save(createUserDTO));
     }
 

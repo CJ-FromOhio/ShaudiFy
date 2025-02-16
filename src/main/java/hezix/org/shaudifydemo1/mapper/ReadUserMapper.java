@@ -5,6 +5,7 @@ import hezix.org.shaudifydemo1.entity.user.dto.ReadUserDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 @Component
@@ -34,9 +35,11 @@ public class ReadUserMapper implements Mapper<ReadUserDTO, User> {
                 .password(user.getPassword())
                 .createdAt(user.getCreatedAt())
                 .description(user.getDescription())
-                .authoredSongs(user.getAuthoredSongs().stream()
+                .authoredSongs(user.getAuthoredSongs() != null
+                        ? user.getAuthoredSongs().stream()
                         .map(readSongMapper::toDto)
-                        .collect(Collectors.toList()))
+                        .collect(Collectors.toList())
+                        : Collections.emptyList())
                 .build();
     }
 }

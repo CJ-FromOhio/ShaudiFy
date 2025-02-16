@@ -11,6 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -40,7 +41,7 @@ public class User implements Serializable {
     private LocalDateTime createdAt;
     @Column(name = "created_by")
     private String createdBy;
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonManagedReference
-    private List<Song> authoredSongs;
+    private List<Song> authoredSongs = new ArrayList<>();
 }

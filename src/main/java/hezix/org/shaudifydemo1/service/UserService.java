@@ -74,13 +74,13 @@ public class UserService {
     }
 
     @Transactional
-    public User save(CreateUserDTO createUserDTO) {
+    public ReadUserDTO save(CreateUserDTO createUserDTO) {
         if (createUserDTO.getPassword().equals(createUserDTO.getPasswordConfirmation())) {
             User user = userMapper.toEntity(createUserDTO);
             user.setRole(Role.ROLE_USER);
             user.setCreatedAt(LocalDateTime.now());
-
-            return userRepository.save(user);
+            userRepository.save(user);
+            return readUserMapper.toDto(user);
         } else {
             log.error("Password : {} , Password Confirmation: {}", createUserDTO.getPassword(), createUserDTO.getPasswordConfirmation());
             throw new PasswordAndPasswordConfirmationNotEquals("Password and password confirmation cannot be same");
