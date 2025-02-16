@@ -1,12 +1,10 @@
-package hezix.org.shaudifydemo1.controller;
+package hezix.org.shaudifydemo1.controller.rest;
 
-import hezix.org.shaudifydemo1.entity.user.User;
 import hezix.org.shaudifydemo1.entity.user.dto.CreateUserDTO;
 import hezix.org.shaudifydemo1.entity.user.dto.ReadUserDTO;
 import hezix.org.shaudifydemo1.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;

@@ -1,6 +1,5 @@
-package hezix.org.shaudifydemo1.controller;
+package hezix.org.shaudifydemo1.controller.rest;
 
-import hezix.org.shaudifydemo1.entity.song.Song;
 import hezix.org.shaudifydemo1.entity.song.SongFile;
 import hezix.org.shaudifydemo1.entity.song.dto.CreateSongDTO;
 import hezix.org.shaudifydemo1.entity.song.dto.ReadSongDTO;
@@ -10,7 +9,6 @@ import hezix.org.shaudifydemo1.mapper.SongFileMapper;
 import hezix.org.shaudifydemo1.service.SongService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
