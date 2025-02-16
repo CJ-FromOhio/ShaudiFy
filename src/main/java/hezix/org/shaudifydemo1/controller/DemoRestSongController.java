@@ -8,8 +8,11 @@ import hezix.org.shaudifydemo1.entity.song.dto.SongFileDTO;
 import hezix.org.shaudifydemo1.entity.user.dto.ReadUserDTO;
 import hezix.org.shaudifydemo1.mapper.SongFileMapper;
 import hezix.org.shaudifydemo1.service.SongService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,7 +26,10 @@ public class DemoRestSongController {
     private final SongFileMapper songFileMapper;
 
     @PostMapping("/create")
-    public ResponseEntity<Song> create(@RequestBody CreateSongDTO createUserDTO) {
+    public ResponseEntity<?> create(@Valid @RequestBody CreateSongDTO createUserDTO, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().body(bindingResult.getFieldError().getDefaultMessage());
+        }
         return ResponseEntity.ok().body(songService.save(createUserDTO));
     }
 

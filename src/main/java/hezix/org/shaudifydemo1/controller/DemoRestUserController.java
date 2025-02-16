@@ -4,8 +4,11 @@ import hezix.org.shaudifydemo1.entity.user.User;
 import hezix.org.shaudifydemo1.entity.user.dto.CreateUserDTO;
 import hezix.org.shaudifydemo1.entity.user.dto.ReadUserDTO;
 import hezix.org.shaudifydemo1.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,7 +21,10 @@ public class DemoRestUserController {
     private final UserService userService;
 
     @PostMapping("/create")
-    public ResponseEntity<ReadUserDTO> create(@RequestBody CreateUserDTO createUserDTO) {
+    public ResponseEntity<?> create(@Valid @RequestBody CreateUserDTO createUserDTO, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().body(bindingResult.getFieldError().getDefaultMessage());
+        }
         return ResponseEntity.ok().body(userService.save(createUserDTO));
     }
 
