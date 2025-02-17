@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>all users</title>
+</head>
+<body>
+  <div>
+    <table>
+      <thead>
+      <tr>
+        <th>Id</th>
+        <th>username</th>
+        <th>description</th>
+        <th>email</th>
+        <th>authored songs</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody th:each="user:${users}">
+      <tr>
+        <th th:text="${user.id}">id</th>
+        <th th:text="${user.username}">username</th>
+        <th th:text="${user.description}">description</th>
+        <th th:text="${user.email}">email</th>
+        <th>
+        <span th:each="song : ${user.authoredSongs}">
+            <a th:href="@{/song/{id}(id=${song.id})}" th:text="${song.title}">Song Title</a>
+          </span>
+        </th>
+        <th><a th:href="@{/user/{id}(id=${user.id})}">На пользователя</a></th>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div>
+    <a href="/">на главную страницу</a>
+  </div>
+</body>
+</html>

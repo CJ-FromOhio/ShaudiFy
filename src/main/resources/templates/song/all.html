@@ -5,10 +5,29 @@
     <title>all songs</title>
 </head>
 <body>
-    <div th:each="song:${songs}">
-        <h3 th:text="${song.id}"></h3>
-        <h3 th:text="${song.title}"></h3>
-        <h3 th:text="${song.description}"></h3>
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>title</th>
+                    <th>description</th>
+<!--                    <th>author</th>-->
+                </tr>
+            </thead>
+            <tbody th:each="song:${songs}">
+                <tr>
+                    <th th:text="${song.id}">id</th>
+                    <th th:text="${song.title}">title</th>
+                    <th th:text="${song.description}">description</th>
+<!--                    <th th:text="${song.author}">author</th>-->
+                    <th><a th:href="@{/song/{id}(id=${song.id})}">На песню</a></th>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <a href="/">на главную страницу</a>
     </div>
 </body>
 </html>
