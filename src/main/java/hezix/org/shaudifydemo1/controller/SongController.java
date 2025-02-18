@@ -55,8 +55,9 @@ public class SongController {
             model.addAttribute("song", songFormDTO);
             return "song/create";
         }
-        Song song = songService.save(songFormDTO);
-        songService.uploadImage(song.getId(), songFormDTO);
+        Song song = songService.save(songFormDTO.getCreateSongDTO());
+        songService.uploadImage(song.getId(), songFormDTO.getSongFileDTO());
+        songService.uploadSong(song.getId(), songFormDTO.getSongFileDTO());
         return "redirect:/song/";
     }
 

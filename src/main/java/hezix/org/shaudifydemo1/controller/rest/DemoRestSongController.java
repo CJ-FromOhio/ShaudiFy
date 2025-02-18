@@ -25,11 +25,11 @@ public class DemoRestSongController {
     private final SongFileMapper songFileMapper;
 
     @PostMapping("/create")
-    public ResponseEntity<?> create(@Valid @RequestBody SongFormDTO songFormDTO, BindingResult bindingResult) {
+    public ResponseEntity<?> create(@Valid @RequestBody CreateSongDTO createSongDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().body(bindingResult.getFieldError().getDefaultMessage());
         }
-        return ResponseEntity.ok().body(songService.save(songFormDTO));
+        return ResponseEntity.ok().body(songService.save(createSongDTO));
     }
 
     @GetMapping("/{id}")
@@ -49,7 +49,7 @@ public class DemoRestSongController {
 
     @PostMapping("/{id}/image")
     public ResponseEntity<ReadSongDTO> uploadImage(@PathVariable Long id, @ModelAttribute SongFormDTO file) {
-        songService.uploadImage(id, file);
+        songService.uploadImage(id, file.getSongFileDTO());
         return ResponseEntity.ok().body(songService.findById(id));
     }
     @DeleteMapping("/{id}/delete")

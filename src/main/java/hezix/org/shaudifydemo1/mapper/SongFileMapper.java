@@ -10,11 +10,15 @@ public class SongFileMapper implements Mapper<SongFileDTO, SongFile> {
     public SongFile toEntity(SongFileDTO songFileDTO) {
         return SongFile.builder()
                 .image(songFileDTO.getImage())
+                .song(songFileDTO.getSong())
                 .build();
     }
 
     @Override
     public SongFileDTO toDto(SongFile songFile) {
-        return null;
+        return SongFileDTO.builder()
+                .image(songFile.getImage())
+                .song(songFile.getSong())
+                .build();
     }
 }

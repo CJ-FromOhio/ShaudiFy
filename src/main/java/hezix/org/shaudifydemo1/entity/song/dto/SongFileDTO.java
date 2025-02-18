@@ -13,4 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class SongFileDTO {
 
     private MultipartFile image;
+
+    private MultipartFile song;
 }

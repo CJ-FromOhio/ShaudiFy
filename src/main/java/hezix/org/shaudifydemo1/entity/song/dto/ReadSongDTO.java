@@ -17,6 +17,5 @@ public class ReadSongDTO implements Serializable {
     private String title;
     private String description;
     private String imageUrl;
-//    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String image;
 }

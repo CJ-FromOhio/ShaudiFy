@@ -42,4 +42,6 @@ public class Song implements Serializable {
     private User user;
     @Column(name = "image")
     private String image;
+    @Column(name = "song")
+    private String song;
 }

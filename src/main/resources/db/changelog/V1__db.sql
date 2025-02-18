@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS songs
     type varchar(16),
     author_id INT REFERENCES users(id),
     image varchar(255),
+    song varchar(255),
     created_at timestamp not null,
     created_by varchar(32)
 );

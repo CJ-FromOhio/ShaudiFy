@@ -14,4 +14,6 @@ public class SongFile {
 
     private MultipartFile image;
 
+    private MultipartFile song;
+
 }

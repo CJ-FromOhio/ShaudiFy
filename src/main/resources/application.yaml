@@ -22,7 +22,8 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
 minio:
-  bucket: images
+  imageBucket: images
+  songBucket: songs
   url: http://localhost:9000
   accessKey: minioadmin
   secretKey: minioadmin
