@@ -13,6 +13,11 @@
         <span th:text=" 'description: ' +  ${song.description}"></span>
     </div>
     <div>
+        <span>обложка песни:</span>
+        <br>
+        <img th:src="${song.imageUrl}" alt="Cover Image" width="150"/>
+    </div>
+    <div>
         <a href="/">на главную страницу</a>
     </div>
 </body>

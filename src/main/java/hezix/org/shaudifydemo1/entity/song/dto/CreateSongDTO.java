@@ -18,6 +18,4 @@ public class CreateSongDTO {
     private String title;
     @Size(max = 32, message = "description must be up to 255 symbols")
     private String description;
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String image;
 }

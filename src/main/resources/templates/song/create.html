@@ -4,16 +4,26 @@
     <meta charset="UTF-8">
     <title>create song page</title>
 </head>
-    <body>
+<body>
     <div>
-        <form th:action="@{/song/save}" th:method="POST" th:object="${song}">
+        <a href="/">на главную страницу</a>
+        <hr>
+    </div>
+    <div>
+        <form th:action="@{/song/save}" th:method="POST" th:object="${song}" enctype="multipart/form-data">
+
             <label for="title">title</label>
-            <input type="text" id="title" name="title">
+            <input type="text" th:field="*{createSongDTO.title}" id="title" name="title">
 
             <br>
 
             <label for="description">description</label>
-            <input type="text" id="description" name="description">
+            <input type="text" th:field="*{createSongDTO.description}" id="description" name="description">
+
+            <br>
+
+            <label for="image">image</label>
+            <input type="file" th:field="*{songFileDTO.image}" id="image" name="image">
 
             <br>
 

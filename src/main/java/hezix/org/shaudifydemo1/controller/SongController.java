@@ -2,6 +2,9 @@ package hezix.org.shaudifydemo1.controller;
 
 import hezix.org.shaudifydemo1.entity.song.Song;
 import hezix.org.shaudifydemo1.entity.song.dto.CreateSongDTO;
+import hezix.org.shaudifydemo1.entity.song.dto.ReadSongDTO;
+import hezix.org.shaudifydemo1.entity.song.dto.SongFileDTO;
+import hezix.org.shaudifydemo1.entity.song.dto.SongFormDTO;
 import hezix.org.shaudifydemo1.service.SongService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -12,9 +15,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -30,16 +31,21 @@ public class SongController {
     }
     @GetMapping("/{id}")
     public String getById(@PathVariable Long id, Model model) {
-        model.addAttribute("song", songService.findById(id));
+        ReadSongDTO readSongDTO = songService.findById(id);
+
+        model.addAttribute("song", readSongDTO);
         return "song/view";
     }
     @GetMapping("/create")
     public String create(Model model) {
-        model.addAttribute("song", new CreateSongDTO());
+        SongFormDTO songFormDTO = new SongFormDTO();
+        songFormDTO.setCreateSongDTO(new CreateSongDTO());
+        songFormDTO.setSongFileDTO(new SongFileDTO());
+        model.addAttribute("song", songFormDTO);
         return "song/create";
     }
     @PostMapping("/save")
-    public String createPage(@ModelAttribute @Valid CreateSongDTO createSongDTO, BindingResult bindingResult, Model model) {
+    public String createPage(@ModelAttribute @Valid SongFormDTO songFormDTO, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             List<String> errors = new ArrayList<>();
             for (FieldError error : bindingResult.getFieldErrors()) {
@@ -48,7 +54,9 @@ public class SongController {
             model.addAttribute("errors", errors);
             return "song/create";
         }
-        songService.save(createSongDTO);
+        Song song = songService.save(songFormDTO);
+        songService.uploadImage(song.getId(), songFormDTO);
         return "redirect:/song/";
     }
+
 }

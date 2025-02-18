@@ -4,6 +4,7 @@ import hezix.org.shaudifydemo1.entity.song.SongFile;
 import hezix.org.shaudifydemo1.entity.song.dto.CreateSongDTO;
 import hezix.org.shaudifydemo1.entity.song.dto.ReadSongDTO;
 import hezix.org.shaudifydemo1.entity.song.dto.SongFileDTO;
+import hezix.org.shaudifydemo1.entity.song.dto.SongFormDTO;
 import hezix.org.shaudifydemo1.entity.user.dto.ReadUserDTO;
 import hezix.org.shaudifydemo1.mapper.SongFileMapper;
 import hezix.org.shaudifydemo1.service.SongService;
@@ -24,11 +25,11 @@ public class DemoRestSongController {
     private final SongFileMapper songFileMapper;
 
     @PostMapping("/create")
-    public ResponseEntity<?> create(@Valid @RequestBody CreateSongDTO createUserDTO, BindingResult bindingResult) {
+    public ResponseEntity<?> create(@Valid @RequestBody SongFormDTO songFormDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().body(bindingResult.getFieldError().getDefaultMessage());
         }
-        return ResponseEntity.ok().body(songService.save(createUserDTO));
+        return ResponseEntity.ok().body(songService.save(songFormDTO));
     }
 
     @GetMapping("/{id}")
@@ -47,9 +48,8 @@ public class DemoRestSongController {
     }
 
     @PostMapping("/{id}/image")
-    public ResponseEntity<ReadSongDTO> uploadImage(@PathVariable Long id, @ModelAttribute SongFileDTO file) {
-        SongFile image = songFileMapper.toEntity(file);
-        songService.uploadImage(id, image);
+    public ResponseEntity<ReadSongDTO> uploadImage(@PathVariable Long id, @ModelAttribute SongFormDTO file) {
+        songService.uploadImage(id, file);
         return ResponseEntity.ok().body(songService.findById(id));
     }
     @DeleteMapping("/{id}/delete")

@@ -3,10 +3,8 @@ package hezix.org.shaudifydemo1.service;
 import hezix.org.shaudifydemo1.entity.song.SongFile;
 import hezix.org.shaudifydemo1.exception.UploadFileException;
 import hezix.org.shaudifydemo1.props.MinioProperties;
-import io.minio.BucketExistsArgs;
-import io.minio.MakeBucketArgs;
-import io.minio.MinioClient;
-import io.minio.PutObjectArgs;
+import io.minio.*;
+import io.minio.http.Method;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
@@ -14,10 +12,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
-public class ImageService {
+public class MinioService {
 
     private final MinioClient minioClient;
     private final MinioProperties minioProperties;
@@ -29,9 +28,9 @@ public class ImageService {
             throw new UploadFileException("Image upload failed, error: " + e.getMessage());
         }
         MultipartFile file = image.getImage();
-        if (file.isEmpty() || file.getOriginalFilename() == null) {
-            throw new UploadFileException("Image upload failed, image must have name.");
-        }
+//        if (file.isEmpty() || file.getOriginalFilename() == null) {
+//            throw new UploadFileException("Image upload failed, image must have name.");
+//        }
         String fileName = generateFileName(file);
         InputStream inputStream;
         try {
@@ -72,5 +71,16 @@ public class ImageService {
                     .bucket(minioProperties.getBucket())
                     .build());
         }
+    }
+    @SneakyThrows
+    public String getPresignedUrl(String bucket, String filename){
+        return minioClient.getPresignedObjectUrl(
+                GetPresignedObjectUrlArgs.builder()
+                        .method(Method.GET)
+                        .bucket(bucket)
+                        .object(filename)
+                        .expiry(7, TimeUnit.DAYS)
+                        .build()
+        );
     }
 }

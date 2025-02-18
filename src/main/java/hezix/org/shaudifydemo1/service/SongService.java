@@ -4,10 +4,13 @@ import hezix.org.shaudifydemo1.entity.song.Song;
 import hezix.org.shaudifydemo1.entity.song.SongFile;
 import hezix.org.shaudifydemo1.entity.song.dto.CreateSongDTO;
 import hezix.org.shaudifydemo1.entity.song.dto.ReadSongDTO;
+import hezix.org.shaudifydemo1.entity.song.dto.SongFileDTO;
+import hezix.org.shaudifydemo1.entity.song.dto.SongFormDTO;
 import hezix.org.shaudifydemo1.entity.user.User;
 import hezix.org.shaudifydemo1.entity.user.dto.ReadUserDTO;
 import hezix.org.shaudifydemo1.mapper.ReadSongMapper;
 import hezix.org.shaudifydemo1.mapper.ReadUserMapper;
+import hezix.org.shaudifydemo1.mapper.SongFileMapper;
 import hezix.org.shaudifydemo1.mapper.SongMapper;
 import hezix.org.shaudifydemo1.repository.SongRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -28,12 +31,13 @@ public class SongService {
     private final SongMapper songMapper;
     private final ReadSongMapper readSongMapper;
     private final ReadUserMapper readUserMapper;
-    private final ImageService imageService;
+    private final MinioService minioService;
+    private final SongFileMapper songFileMapper;
 
     @Transactional
-    public Song save(CreateSongDTO createSongDTO) {
+    public Song save(SongFormDTO songFormDTO) {
+        CreateSongDTO createSongDTO = songFormDTO.getCreateSongDTO();
         Song song = songMapper.toEntity(createSongDTO);
-
         return songRepository.save(song);
     }
 
@@ -51,6 +55,8 @@ public class SongService {
                 .orElseThrow(() -> new EntityNotFoundException("Song not found by id: " + id));
         ReadSongDTO readSongDTO = readSongMapper
                 .toDto(song);
+        String imageUrl = minioService.getPresignedUrl("images", readSongDTO.getImage());
+        readSongDTO.setImageUrl(imageUrl);
         return readSongDTO;
     }
     @Transactional(readOnly = true)
@@ -78,9 +84,11 @@ public class SongService {
     }
 //    @Cacheable(value = "SongService::findById", key = "#id")
     @Transactional
-    public void uploadImage(Long id, SongFile image) {
+    public void uploadImage(Long id, SongFormDTO songFormDTO) {
+        SongFileDTO songFileDTO = songFormDTO.getSongFileDTO();
+        SongFile image = songFileMapper.toEntity(songFileDTO);
         Song song = findSongEntityById(id);
-        String filename = imageService.upload(image);
+        String filename = minioService.upload(image);
         song.setImage(filename);
         songRepository.save(song);
     }
