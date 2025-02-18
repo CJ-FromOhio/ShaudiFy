@@ -52,6 +52,7 @@ public class SongController {
                 errors.add(error.getDefaultMessage());
             }
             model.addAttribute("errors", errors);
+            model.addAttribute("song", songFormDTO);
             return "song/create";
         }
         Song song = songService.save(songFormDTO);
