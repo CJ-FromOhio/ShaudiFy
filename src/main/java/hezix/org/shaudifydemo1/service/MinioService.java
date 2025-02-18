@@ -21,9 +21,9 @@ public class MinioService {
     private final MinioClient minioClient;
     private final MinioProperties minioProperties;
 
-    public String upload(SongFile file, String bucketName) {
+    public String uploadImage(SongFile file) {
         try {
-            createBucket(bucketName);
+            createBucket(minioProperties.getImageBucket());
         } catch (Exception e) {
             throw new UploadFileException("Image upload failed, error: " + e.getMessage());
         }
@@ -39,6 +39,26 @@ public class MinioService {
             throw new UploadFileException("Image upload failed, error: " + e.getMessage());
         }
         saveImage(inputStream, fileName);
+        return fileName;
+    }
+    public String uploadSong(SongFile file) {
+        try {
+            createBucket(minioProperties.getSongBucket());
+        } catch (Exception e) {
+            throw new UploadFileException("Image upload failed, error: " + e.getMessage());
+        }
+        MultipartFile multipartFile = file.getSong();
+//        if (file.isEmpty() || file.getOriginalFilename() == null) {
+//            throw new UploadFileException("Image upload failed, image must have name.");
+//        }
+        String fileName = generateFileName(multipartFile);
+        InputStream inputStream;
+        try {
+            inputStream = multipartFile.getInputStream();
+        } catch (Exception e) {
+            throw new UploadFileException("Image upload failed, error: " + e.getMessage());
+        }
+        saveSong(inputStream, fileName);
         return fileName;
     }
 

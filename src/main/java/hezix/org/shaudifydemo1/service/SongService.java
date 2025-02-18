@@ -56,8 +56,16 @@ public class SongService {
                 .orElseThrow(() -> new EntityNotFoundException("Song not found by id: " + id));
         ReadSongDTO readSongDTO = readSongMapper
                 .toDto(song);
-        String imageUrl = minioService.getPresignedUrl("images", readSongDTO.getImage());
-        readSongDTO.setImageUrl(imageUrl);
+        if(song.getImage() != null) {
+            String imageUrl = minioService.getPresignedUrl("images", readSongDTO.getImage());
+            readSongDTO.setImageUrl(imageUrl);
+            return readSongDTO;
+        }
+        if(song.getSong() != null) {
+            String songUrl = minioService.getPresignedUrl("songs", readSongDTO.getSong());
+            readSongDTO.setSongUrl(songUrl);
+            return readSongDTO;
+        }
         return readSongDTO;
     }
     @Transactional(readOnly = true)
@@ -88,7 +96,7 @@ public class SongService {
     public void uploadImage(Long id, SongFileDTO songFileDTO) {
         SongFile imageFile = songFileMapper.toEntity(songFileDTO);
         Song song = findSongEntityById(id);
-        String filename = minioService.upload(imageFile, "images");
+        String filename = minioService.uploadImage(imageFile);
         song.setImage(filename);
         songRepository.save(song);
     }
@@ -96,8 +104,8 @@ public class SongService {
     public void uploadSong(Long id, SongFileDTO songFileDTO) {
         SongFile songFile = songFileMapper.toEntity(songFileDTO);
         Song song = findSongEntityById(id);
-        String filename = minioService.upload(songFile, "songs");
-        song.setImage(filename);
+        String filename = minioService.uploadSong(songFile);
+        song.setSong(filename);
         songRepository.save(song);
     }
 }

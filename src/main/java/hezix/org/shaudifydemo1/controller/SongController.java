@@ -56,8 +56,14 @@ public class SongController {
             return "song/create";
         }
         Song song = songService.save(songFormDTO.getCreateSongDTO());
-        songService.uploadImage(song.getId(), songFormDTO.getSongFileDTO());
-        songService.uploadSong(song.getId(), songFormDTO.getSongFileDTO());
+
+        if (songFormDTO.getSongFileDTO().getImage() != null && !songFormDTO.getSongFileDTO().getImage().isEmpty()) {
+            songService.uploadImage(song.getId(), songFormDTO.getSongFileDTO());
+        }
+
+        if (songFormDTO.getSongFileDTO().getSong() != null && !songFormDTO.getSongFileDTO().getSong().isEmpty()) {
+            songService.uploadSong(song.getId(), songFormDTO.getSongFileDTO());
+        }
         return "redirect:/song/";
     }
 
