@@ -1,18 +1,18 @@
 services:
-  app:
-    build:
-      context: .
-    container_name: app
-    depends_on:
-      - db
-      - redis
-      - minio
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/shaudify
-      - SPRING_DATASOURCE_PASSWORD=pass
-      - SPRING_DATASOURCE_USERNAME=postgres
-    ports:
-      - '8080:8080'
+#  app:
+#    build:
+#      context: .
+#    container_name: app
+#    depends_on:
+#      - db
+#      - redis
+#      - minio
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/shaudify
+#      - SPRING_DATASOURCE_PASSWORD=pass
+#      - SPRING_DATASOURCE_USERNAME=postgres
+#    ports:
+#      - '8080:8080'
   db:
     image: postgres:17-alpine
     container_name: postgres

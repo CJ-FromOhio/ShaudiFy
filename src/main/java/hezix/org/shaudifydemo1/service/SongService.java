@@ -37,6 +37,7 @@ public class SongService {
 
 
     @Transactional
+//    @CacheEvict(value = "SongService::findById", key = "#createSongDTO.id")
     public Song save(CreateSongDTO createSongDTO) {
         Song song = songMapper.toEntity(createSongDTO);
         return songRepository.save(song);
@@ -44,9 +45,20 @@ public class SongService {
 
     @Transactional(readOnly = true)
     public List<ReadSongDTO> findAll() {
-        return songRepository.findAll().stream()
+        List<ReadSongDTO> songs = songRepository.findAll().stream()
                 .map(readSongMapper::toDto)
                 .toList();
+        for (ReadSongDTO song : songs) {
+            if(song.getImage() != null) {
+                String imageUrl = minioService.getPresignedUrl("images", song.getImage());
+                song.setImageUrl(imageUrl);
+            }
+            if(song.getSong() != null) {
+                String songUrl = minioService.getPresignedUrl("songs", song.getSong());
+                song.setSongUrl(songUrl);
+            }
+        }
+        return songs;
     }
 
     @Transactional(readOnly = true)
@@ -59,12 +71,10 @@ public class SongService {
         if(song.getImage() != null) {
             String imageUrl = minioService.getPresignedUrl("images", readSongDTO.getImage());
             readSongDTO.setImageUrl(imageUrl);
-            return readSongDTO;
         }
         if(song.getSong() != null) {
             String songUrl = minioService.getPresignedUrl("songs", readSongDTO.getSong());
             readSongDTO.setSongUrl(songUrl);
-            return readSongDTO;
         }
         return readSongDTO;
     }

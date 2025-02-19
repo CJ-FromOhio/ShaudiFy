@@ -3,33 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <title>all songs</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
 <body>
     <div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>title</th>
-                    <th>description</th>
-<!--                    <th>author</th>-->
-                </tr>
-            </thead>
-            <tbody th:each="song:${songs}">
-                <tr>
-                    <th th:text="${song.id}">id</th>
-                    <th th:text="${song.title}">title</th>
-                    <th th:text="${song.description}">description</th>
-<!--                    <th th:text="${song.author}">author</th>-->
-                    <th><a th:href="@{/song/{id}(id=${song.id})}">На песню</a></th>
-                </tr>
-            </tbody>
-        </table>
+        <div th:each="song:${songs}" class="item">
+                <img th:src="${song.imageUrl}" alt="Cover Image" width="20"/>
+            <span th:text="${song.id}">id</span>
+            <span th:text="${song.title}">title</span>
+            <span th:text="${song.description}">description</span>
+            <span>
+                <a th:href="@{/song/{id}(id=${song.id})}" class="button">На песню</a>
+            </span>
+        </div>
     </div>
-    <div>
+    <div class="button">
         <a th:href="@{/song/create}">создать</a>
     </div>
-    <div>
+    <div class="button">
         <a href="/">на главную страницу</a>
     </div>
 </body>

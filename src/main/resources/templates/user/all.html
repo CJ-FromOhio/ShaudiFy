@@ -3,40 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <title>all users</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div>
-    <table>
-      <thead>
-      <tr>
-        <th>Id</th>
-        <th>username</th>
-        <th>description</th>
-        <th>email</th>
-        <th>authored songs</th>
-        <th></th>
-      </tr>
-      </thead>
-      <tbody th:each="user:${users}">
-      <tr>
-        <th th:text="${user.id}">id</th>
-        <th th:text="${user.username}">username</th>
-        <th th:text="${user.description}">description</th>
-        <th th:text="${user.email}">email</th>
-        <th>
-        <span th:each="song : ${user.authoredSongs}">
-            <a th:href="@{/song/{id}(id=${song.id})}" th:text="${song.title}">Song Title</a>
-          </span>
-        </th>
-        <th><a th:href="@{/user/{id}(id=${user.id})}">На пользователя</a></th>
-      </tr>
-      </tbody>
-    </table>
+  <div th:each="user : ${users}" class="item">
+    <span th:text="${user.id}">id</span>
+    <br>
+    <span th:text="${user.username}">id</span>
+    <br>
+    <span th:text="${user.role}">id</span>
+    <br>
+    <span th:text="${user.email}">title</span>
+    <br>
+    <span th:text="${user.description}">description</span>
+    <br>
+    <span th:each="song : ${user.authoredSongs}">
+      <a th:href="@{/song/{id}(id=${song.id})}" th:text="${song.title}">song Title</a>
+    </span>
+
+    <span>
+      <a th:href="@{/user/{id}(id=${user.id})}" class="button">На пользователя</a>
+    </span>
+
+
   </div>
   <div>
-    <a th:href="@{/user/create}">создать</a>
+    <a th:href="@{/user/create}" class="button">создать</a>
   </div>
-  <div>
+  <div class="button">
     <a href="/">на главную страницу</a>
   </div>
 </body>

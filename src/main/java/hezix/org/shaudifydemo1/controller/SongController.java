@@ -36,6 +36,11 @@ public class SongController {
         model.addAttribute("song", readSongDTO);
         return "song/view";
     }
+    @GetMapping("/randomSong")
+    public String getRandomSong(Model model) {
+        return "song/random";
+    }
+
     @GetMapping("/create")
     public String create(Model model) {
         SongFormDTO songFormDTO = new SongFormDTO();

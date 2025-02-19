@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>song</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
 <body>
 <div>
@@ -22,7 +26,7 @@
     <span>Файл песни:</span>
     <br>
     <audio controls>
-        <source th:src="@{${song.songUrl}}" type="audio/mp3">
+        <source th:src="${song.songUrl}" type="audio/mp3">
         Ваш браузер не поддерживает аудио элемент.
     </audio>
 </div>
@@ -34,7 +38,7 @@
     <span style="color: red">файл песни ещё не загружен</span>
 </div>
 
-<div>
+<div class="button">
     <a href="/">на главную страницу</a>
 </div>
 
