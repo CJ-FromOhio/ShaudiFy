@@ -20,6 +20,7 @@ public class UserMapper implements Mapper<CreateUserDTO,User> {
                 .description(createUserDTO.getDescription())
                 .createdAt(LocalDateTime.now())
                 .role(Role.ROLE_USER)
+
                 .build();
     }
 

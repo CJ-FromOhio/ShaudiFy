@@ -1,14 +1,21 @@
 package hezix.org.shaudifydemo1.service;
 
+import hezix.org.shaudifydemo1.entity.song.Song;
+import hezix.org.shaudifydemo1.entity.song.SongFile;
 import hezix.org.shaudifydemo1.entity.song.dto.ReadSongDTO;
+import hezix.org.shaudifydemo1.entity.song.dto.SongFileDTO;
 import hezix.org.shaudifydemo1.entity.user.Role;
 import hezix.org.shaudifydemo1.entity.user.User;
+import hezix.org.shaudifydemo1.entity.user.UserFile;
 import hezix.org.shaudifydemo1.entity.user.dto.CreateUserDTO;
 import hezix.org.shaudifydemo1.entity.user.dto.ReadUserDTO;
+import hezix.org.shaudifydemo1.entity.user.dto.UserFileDTO;
+import hezix.org.shaudifydemo1.entity.user.dto.UserFormDTO;
 import hezix.org.shaudifydemo1.exception.PasswordAndPasswordConfirmationNotEquals;
 import hezix.org.shaudifydemo1.exception.EntityNotFoundException;
 import hezix.org.shaudifydemo1.mapper.ReadSongMapper;
 import hezix.org.shaudifydemo1.mapper.ReadUserMapper;
+import hezix.org.shaudifydemo1.mapper.UserFileMapper;
 import hezix.org.shaudifydemo1.mapper.UserMapper;
 import hezix.org.shaudifydemo1.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +39,8 @@ public class UserService {
     private final UserMapper userMapper;
     private final ReadSongMapper readSongMapper;
     private final ReadUserMapper readUserMapper;
+    private final MinioService minioService;
+    private final UserFileMapper userFileMapper;
 
     @Transactional(readOnly = true)
     @Cacheable(value = "UserService::getById", key = "#id")
@@ -44,6 +53,10 @@ public class UserService {
                 .toList();
         ReadUserDTO readUserDTO = readUserMapper.toDto(user);
         readUserDTO.setAuthoredSongs(songs);
+        if(readUserDTO.getImage() != null) {
+            String imageUrl = minioService.getPresignedUrl("images", user.getImage());
+            readUserDTO.setImageUrl(imageUrl);
+        }
         return readUserDTO;
     }
     @Transactional(readOnly = true)
@@ -70,6 +83,12 @@ public class UserService {
                 .stream()
                 .map(readUserMapper::toDto)
                 .toList();
+        for (ReadUserDTO user : arr) {
+            if(user.getImage() != null) {
+                String imageUrl = minioService.getPresignedUrl("images", user.getImage());
+                user.setImageUrl(imageUrl);
+            }
+        }
         return arr;
     }
 
@@ -103,5 +122,13 @@ public class UserService {
         } else {
             throw new EntityNotFoundException("User for delete not found by id: " + id);
         }
+    }
+    @Transactional
+    public void uploadImage(Long id, UserFileDTO userFileDTO) {
+        UserFile userFile = userFileMapper.toEntity(userFileDTO);
+        User user = findUserEntityById(id);
+        String filename = minioService.uploadUserImage(userFile);
+        user.setImage(filename);
+        userRepository.save(user);
     }
 }

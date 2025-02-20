@@ -1,4 +1,4 @@
-package hezix.org.shaudifydemo1.entity.song;
+package hezix.org.shaudifydemo1.entity.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,10 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class SongFile{
-
+public class UserFile {
     private MultipartFile image;
-
-    private MultipartFile song;
 
 }

@@ -1,6 +1,7 @@
 package hezix.org.shaudifydemo1.service;
 
 import hezix.org.shaudifydemo1.entity.song.SongFile;
+import hezix.org.shaudifydemo1.entity.user.UserFile;
 import hezix.org.shaudifydemo1.exception.UploadFileException;
 import hezix.org.shaudifydemo1.props.MinioProperties;
 import io.minio.*;
@@ -21,7 +22,27 @@ public class MinioService {
     private final MinioClient minioClient;
     private final MinioProperties minioProperties;
 
-    public String uploadImage(SongFile file) {
+    public String uploadSongImage(SongFile file) {
+        try {
+            createBucket(minioProperties.getImageBucket());
+        } catch (Exception e) {
+            throw new UploadFileException("Image upload failed, error: " + e.getMessage());
+        }
+        MultipartFile multipartFile = file.getImage();
+//        if (file.isEmpty() || file.getOriginalFilename() == null) {
+//            throw new UploadFileException("Image upload failed, image must have name.");
+//        }
+        String fileName = generateFileName(multipartFile);
+        InputStream inputStream;
+        try {
+            inputStream = multipartFile.getInputStream();
+        } catch (Exception e) {
+            throw new UploadFileException("Image upload failed, error: " + e.getMessage());
+        }
+        saveImage(inputStream, fileName);
+        return fileName;
+    }
+    public String uploadUserImage(UserFile file) {
         try {
             createBucket(minioProperties.getImageBucket());
         } catch (Exception e) {

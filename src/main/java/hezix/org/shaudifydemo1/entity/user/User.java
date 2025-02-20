@@ -44,4 +44,6 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Song> authoredSongs = new ArrayList<>();
+    @Column(name = "image")
+    private String image;
 }

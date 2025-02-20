@@ -1,8 +1,14 @@
 package hezix.org.shaudifydemo1.controller;
 
 import hezix.org.shaudifydemo1.entity.song.dto.CreateSongDTO;
+import hezix.org.shaudifydemo1.entity.song.dto.SongFileDTO;
+import hezix.org.shaudifydemo1.entity.song.dto.SongFormDTO;
 import hezix.org.shaudifydemo1.entity.user.User;
 import hezix.org.shaudifydemo1.entity.user.dto.CreateUserDTO;
+import hezix.org.shaudifydemo1.entity.user.dto.ReadUserDTO;
+import hezix.org.shaudifydemo1.entity.user.dto.UserFileDTO;
+import hezix.org.shaudifydemo1.entity.user.dto.UserFormDTO;
+import hezix.org.shaudifydemo1.mapper.ReadUserMapper;
 import hezix.org.shaudifydemo1.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +27,7 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final ReadUserMapper readUserMapper;
 
     @GetMapping("/")
     public String all(Model model) {
@@ -36,21 +43,30 @@ public class UserController {
 
     @GetMapping("/create")
     public String create(Model model) {
-        model.addAttribute("user", new CreateUserDTO());
+        UserFormDTO userFormDTO = new UserFormDTO();
+        userFormDTO.setCreateUserDTO(new CreateUserDTO());
+        userFormDTO.setUserFileDTO(new UserFileDTO());
+        model.addAttribute("user", userFormDTO);
         return "user/create";
     }
 
     @PostMapping("/save")
-    public String createPage(@ModelAttribute @Valid CreateUserDTO createUserDTO, BindingResult bindingResult, Model model) {
+    public String createPage(@ModelAttribute @Valid UserFormDTO userFormDTO, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             List<String> errors = new ArrayList<>();
             for (FieldError error : bindingResult.getFieldErrors()) {
                 errors.add(error.getDefaultMessage());
             }
             model.addAttribute("errors", errors);
+            model.addAttribute("user", userFormDTO);
             return "user/create";
         }
-        userService.save(createUserDTO);
+        User user = readUserMapper.toEntity(userService.save(userFormDTO.getCreateUserDTO()));
+
+        if (userFormDTO.getUserFileDTO().getImage() != null && !userFormDTO.getUserFileDTO().getImage().isEmpty()) {
+            userService.uploadImage(user.getId(), userFormDTO.getUserFileDTO());
+        }
+
         return "redirect:/user/";
     }
 }

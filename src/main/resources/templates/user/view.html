@@ -26,6 +26,11 @@
             <a th:href="@{/song/{id}(id=${song.id})}" th:text="${song.title}">Song Title</a>
         </span>
     </div>
+    <div th:if="${user.image != null}">
+        <span>аватар пользователя:</span>
+        <br>
+        <img th:src="${user.imageUrl}" alt="Cover Image" width="150"/>
+    </div>
     <div class="button">
         <a href="/">на главную страницу</a>
     </div>

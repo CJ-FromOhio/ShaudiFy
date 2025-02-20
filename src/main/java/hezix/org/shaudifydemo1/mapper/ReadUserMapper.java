@@ -22,6 +22,7 @@ public class ReadUserMapper implements Mapper<ReadUserDTO, User> {
                 .email(readUserDTO.getEmail())
                 .role(readUserDTO.getRole())
                 .createdAt(readUserDTO.getCreatedAt())
+                .image(readUserDTO.getImage())
                 .build();
     }
 
@@ -40,6 +41,7 @@ public class ReadUserMapper implements Mapper<ReadUserDTO, User> {
                         .map(readSongMapper::toDto)
                         .collect(Collectors.toList())
                         : Collections.emptyList())
+                .image(user.getImage())
                 .build();
     }
 }

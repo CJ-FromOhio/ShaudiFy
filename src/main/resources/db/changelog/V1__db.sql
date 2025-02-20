@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS users
     description varchar(255) ,
     role varchar(16),
     created_at timestamp not null,
+    image varchar(255),
     created_by varchar(32)
 );
 --changelog hezix:2

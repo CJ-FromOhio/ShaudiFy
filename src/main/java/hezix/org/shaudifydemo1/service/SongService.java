@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +35,6 @@ public class SongService {
     private final ReadUserMapper readUserMapper;
     private final MinioService minioService;
     private final SongFileMapper songFileMapper;
-
 
     @Transactional
 //    @CacheEvict(value = "SongService::findById", key = "#createSongDTO.id")
@@ -66,8 +66,7 @@ public class SongService {
     public ReadSongDTO findById(Long id) {
         Song song = songRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Song not found by id: " + id));
-        ReadSongDTO readSongDTO = readSongMapper
-                .toDto(song);
+        ReadSongDTO readSongDTO = readSongMapper.toDto(song);
         if(song.getImage() != null) {
             String imageUrl = minioService.getPresignedUrl("images", readSongDTO.getImage());
             readSongDTO.setImageUrl(imageUrl);
@@ -78,6 +77,14 @@ public class SongService {
         }
         return readSongDTO;
     }
+    @Transactional(readOnly = true)
+    public ReadSongDTO findRandomSong(){
+        Random random = new Random();
+        List<ReadSongDTO> songs = findAll();
+        int index = random.nextInt(songs.size());
+        return songs.get(index);
+    }
+
     @Transactional(readOnly = true)
     @Cacheable(value = "SongService::findImageById", key = "#id")
     public String findImageById(Long id) {
@@ -106,7 +113,7 @@ public class SongService {
     public void uploadImage(Long id, SongFileDTO songFileDTO) {
         SongFile imageFile = songFileMapper.toEntity(songFileDTO);
         Song song = findSongEntityById(id);
-        String filename = minioService.uploadImage(imageFile);
+        String filename = minioService.uploadSongImage(imageFile);
         song.setImage(filename);
         songRepository.save(song);
     }

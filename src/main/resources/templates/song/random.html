@@ -3,8 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <title>random song</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
 <body>
+<div>
+    <div class="song-item">
+        <div th:if="${song.image != null}">
+            <span>обложка песни:</span>
+            <br>
+            <img th:src="${song.imageUrl}" alt="Cover Image" width="150"/>
+        </div>
 
+        <span th:text=" 'id: ' +  ${song.id}"></span>
+        <br>
+        <span th:text=" 'title: ' +  ${song.title}"></span>
+        <br>
+        <span th:text=" 'description: ' +  ${song.description}"></span>
+
+        <div th:if="${song.song != null}">
+            <span>Файл песни:</span>
+            <br>
+            <audio controls class="custom-audio">
+                <source th:src="${song.songUrl}" type="audio/mp3">
+                Ваш браузер не поддерживает аудио элемент.
+            </audio>
+
+        </div>
+        <div th:if="${song.image == null}">
+            <span style="color: red">у песни нету обложки</span>
+        </div>
+        <div th:if="${song.song == null}">
+            <span style="color: red">файл песни ещё не загружен</span>
+        </div>
+    </div>
+    <div class="button">
+        <a href="/">на главную страницу</a>
+    </div>
+    <div class="button">
+        <a href="/song/randomSong">зарандомить песню</a>
+    </div>
+</div>
 </body>
 </html>

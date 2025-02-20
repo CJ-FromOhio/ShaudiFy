@@ -38,6 +38,7 @@ public class SongController {
     }
     @GetMapping("/randomSong")
     public String getRandomSong(Model model) {
+        model.addAttribute("song", songService.findRandomSong());
         return "song/random";
     }
 

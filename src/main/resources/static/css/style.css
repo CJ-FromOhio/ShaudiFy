@@ -70,12 +70,15 @@
                  font-weight: 550;
                  font-style: normal;
              }
-h3 {
+h3,h2,h4 {
     font-family: "Montserrat", serif;
     font-optical-sizing: auto;
     font-weight: 550;
     font-style: normal;
     text-align: center; /* Центрирует текст */
+}
+body {
+    background-color: dimgray;);
 }
 span {
     font-family: "Montserrat", serif;
@@ -89,6 +92,11 @@ label {
     font-weight: 550;
     font-style: normal;
 }
-body {
-    center: auto;
+.custom-audio {
+    width: 300px;
+    filter: invert(1) sepia(1) hue-rotate(180deg);
+    border-radius: 10px;
 }
+
+
+

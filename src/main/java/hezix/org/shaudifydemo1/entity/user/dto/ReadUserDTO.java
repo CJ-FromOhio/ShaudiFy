@@ -25,4 +25,6 @@ public class ReadUserDTO implements Serializable {
     private String email;
     private LocalDateTime createdAt;
     private List<ReadSongDTO> authoredSongs;
+    private String imageUrl;
+    private String image;
 }

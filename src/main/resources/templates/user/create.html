@@ -14,30 +14,37 @@
 </div>
 
 <div class="input-container">
-    <form th:action="@{/user/save}" th:method="POST" th:object="${user}">
+    <form th:action="@{/user/save}" th:method="POST" th:object="${user}" enctype="multipart/form-data">
 
-        <label for="username">username</label>
-        <input type="text" id="username" name="username" class="input-field">
+        <label for="username">Username</label>
+        <input type="text" th:field="*{createUserDTO.username}" id="username" name="username" class="input-field">
+
+        <br>
 
         <br>
 
         <label for="description">description</label>
-        <input type="text" id="description" name="description" class="input-field">
+        <input type="text" th:field="*{createUserDTO.description}" id="description" name="description" class="input-field">
 
         <br>
 
         <label for="password">password</label>
-        <input type="text" id="password" name="password" class="input-field">
+        <input type="text" th:field="*{createUserDTO.password}" id="password" name="password" class="input-field">
 
         <br>
 
         <label for="passwordConfirmation">password Confirmation</label>
-        <input type="text" id="passwordConfirmation" name="passwordConfirmation" class="input-field">
+        <input type="text" th:field="*{createUserDTO.passwordConfirmation}" id="passwordConfirmation" name="passwordConfirmation" class="input-field">
 
         <br>
 
         <label for="email">email</label>
-        <input type="email" id="email" name="email" class="input-field">
+        <input type="email" th:field="*{createUserDTO.email}" id="email" name="email" class="input-field">
+
+        <br>
+
+        <label for="image">image</label>
+        <input type="file" th:field="*{userFileDTO.image}" id="image" name="image" class="input-field">
 
         <br>
 

@@ -25,7 +25,7 @@
 <div th:if="${song.song != null}">
     <span>Файл песни:</span>
     <br>
-    <audio controls>
+    <audio controls class="custom-audio">
         <source th:src="${song.songUrl}" type="audio/mp3">
         Ваш браузер не поддерживает аудио элемент.
     </audio>
