@@ -11,6 +11,7 @@ import hezix.org.shaudifydemo1.service.SongService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +36,11 @@ public class DemoRestSongController {
     @GetMapping("/{id}")
     public ResponseEntity<ReadSongDTO> get(@PathVariable Long id) {
         return ResponseEntity.ok().body(songService.findById(id));
+    }
+
+    @GetMapping("/randomSong")
+    public ReadSongDTO getRandomSong() {
+        return songService.findRandomSong();
     }
 
     @GetMapping("/{userId}/song/{songId}")
