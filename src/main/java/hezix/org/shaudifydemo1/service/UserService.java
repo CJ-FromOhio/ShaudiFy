@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -62,7 +63,12 @@ public class UserService {
     @Transactional(readOnly = true)
     public User findUserEntityById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User not found by id: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("User Entity not found by id: " + id));
+    }
+    @Transactional(readOnly = true)
+    @Cacheable(value = "UserService::getByUsername", key = "#username")
+    public Optional<User> findUserEntityByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
     @Cacheable(value = "UserService::getByUsername", key = "#username")
     @Transactional(readOnly = true)

@@ -35,6 +35,7 @@ public class SongService {
     private final ReadUserMapper readUserMapper;
     private final MinioService minioService;
     private final SongFileMapper songFileMapper;
+    private final Random random;
 
     @Transactional
 //    @CacheEvict(value = "SongService::findById", key = "#createSongDTO.id")
@@ -79,7 +80,6 @@ public class SongService {
     }
     @Transactional(readOnly = true)
     public ReadSongDTO findRandomSong(){
-        Random random = new Random();
         List<ReadSongDTO> songs = findAll();
         int index = random.nextInt(songs.size());
         return songs.get(index);

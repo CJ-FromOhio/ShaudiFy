@@ -23,7 +23,6 @@ import java.util.List;
 public class DemoRestSongController {
 
     private final SongService songService;
-    private final SongFileMapper songFileMapper;
 
     @PostMapping("/create")
     public ResponseEntity<?> create(@Valid @RequestBody CreateSongDTO createSongDTO, BindingResult bindingResult) {
