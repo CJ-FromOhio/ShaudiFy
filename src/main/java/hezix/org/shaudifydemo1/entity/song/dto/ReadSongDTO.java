@@ -19,6 +19,7 @@ public class ReadSongDTO implements Serializable {
     private Long id;
     private String title;
     private String description;
+    private String createdBy;
     private String imageUrl;
     private String image;
     private String songUrl;

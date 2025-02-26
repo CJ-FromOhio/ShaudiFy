@@ -27,6 +27,10 @@
 .item:last-child {
     border-bottom: none;
 }
+.user-container {
+    border-bottom: 1px solid #ddd;
+    background-color: #3700b3;
+}
 .song-button:hover {
     background-color: #3700b3;
 }

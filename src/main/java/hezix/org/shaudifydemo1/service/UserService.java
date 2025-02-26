@@ -70,7 +70,7 @@ public class UserService {
     public Optional<User> findUserEntityByUsername(String username) {
         return userRepository.findByUsername(username);
     }
-    @Cacheable(value = "UserService::getByUsername", key = "#username")
+//    @Cacheable(value = "UserService::getByUsername", key = "#username")
     @Transactional(readOnly = true)
     public ReadUserDTO findUserByUsername(String username) {
         User user = userRepository.findByUsername(username)
@@ -80,6 +80,10 @@ public class UserService {
                 .map(readSongMapper::toDto)
                 .toList();
         ReadUserDTO readUserDTO = readUserMapper.toDto(user);
+        if(readUserDTO.getImage() != null) {
+            String imageUrl = minioService.getPresignedUrl("images", user.getImage());
+            readUserDTO.setImageUrl(imageUrl);
+        }
         readUserDTO.setAuthoredSongs(songs);
         return readUserDTO;
     }

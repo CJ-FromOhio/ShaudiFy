@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>registry</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="button">
+    <a href="/">на главную страницу</a>
+</div>
+
+<div class="input-container">
+    <form th:action="@{/registration}" th:method="POST" th:object="${user}" enctype="multipart/form-data">
+
+        <label for="username">Username</label>
+        <input type="text" th:field="*{createUserDTO.username}" id="username" name="username" class="input-field">
+
+        <br>
+
+        <br>
+
+        <label for="description">description</label>
+        <input type="text" th:field="*{createUserDTO.description}" id="description" name="description" class="input-field">
+
+        <br>
+
+        <label for="password">password</label>
+        <input type="text" th:field="*{createUserDTO.password}" id="password" name="password" class="input-field">
+
+        <br>
+
+        <label for="passwordConfirmation">password Confirmation</label>
+        <input type="text" th:field="*{createUserDTO.passwordConfirmation}" id="passwordConfirmation" name="passwordConfirmation" class="input-field">
+
+        <br>
+
+        <label for="email">email</label>
+        <input type="email" th:field="*{createUserDTO.email}" id="email" name="email" class="input-field">
+
+        <br>
+
+        <label for="image">image</label>
+        <input type="file" th:field="*{userFileDTO.image}" id="image" name="image" class="input-field">
+
+        <br>
+
+        <input type="submit" value="Create" class="button">
+    </form>
+</div>
+<div th:if="${!errors.isEmpty()}" th:each="error:${errors}">
+    <span style="color: red" th:text="${error}">error field</span>
+</div>
+</body>
+</html>

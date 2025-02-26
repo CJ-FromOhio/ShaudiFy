@@ -12,20 +12,26 @@
 <h2>shaudiFy</h2>
 <h3>main page</h3>
 <h4>настолько плохо, что даже хорошо</h4>
-<h5 th:text=" 'пользователь: ' + ${user.username} + ', роль: ' + ${user.getAuthorities()}"></h5>
+<div class="user-container">
+    <div th:if="${user.image != null}">
+        <span>аватар пользователя:</span>
+        <br>
+        <img th:src="${user.imageUrl}" alt="Cover Image" width="100"/>
+    </div>
+    <h5 th:text=" 'пользователь: ' + ${user.username} + ', роль: ' + ${user.getRole()}"></h5>
+</div>
 <hr>
 <div class="centering-container">
 <img src="https://cdns-images.dzcdn.net/images/cover/703e8a0c564c7995087ebd711c442363/1000x1000.jpg" alt="sigma" height="150" width="300">
 </div>
 <br>
 <div class="button-container">
-<div class="button">
-    <a href="/song/">посмотреть все песни</a>
-</div>
-
-<div class="button">
-    <a href="/user/">посмотреть всех пользователей</a>
-</div>
+    <div class="button">
+        <a href="/song/">посмотреть все песни</a>
+    </div>
+    <div class="button">
+        <a href="/user/">посмотреть всех пользователей</a>
+    </div>
 </div>
 </body>
 </html>

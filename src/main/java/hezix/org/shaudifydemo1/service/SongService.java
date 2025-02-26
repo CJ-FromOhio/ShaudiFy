@@ -105,6 +105,7 @@ public class SongService {
         User user = userService.findUserEntityById(userId);
         Song song = findSongEntityById(songId);
         song.setUser(user);
+        song.setCreatedBy(user.getUsername());
         user.getAuthoredSongs().add(song);
         return readUserMapper.toDto(user);
     }

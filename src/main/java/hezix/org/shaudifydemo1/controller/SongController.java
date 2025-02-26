@@ -6,6 +6,7 @@ import hezix.org.shaudifydemo1.entity.song.dto.ReadSongDTO;
 import hezix.org.shaudifydemo1.entity.song.dto.SongFileDTO;
 import hezix.org.shaudifydemo1.entity.song.dto.SongFormDTO;
 import hezix.org.shaudifydemo1.service.SongService;
+import hezix.org.shaudifydemo1.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,7 @@ import java.util.List;
 public class SongController {
 
     private final SongService songService;
+    private final UserService userService;
 
     @GetMapping("/")
     public String getAll(Model model) {
@@ -32,7 +34,9 @@ public class SongController {
     @GetMapping("/{id}")
     public String getById(@PathVariable Long id, Model model) {
         ReadSongDTO readSongDTO = songService.findById(id);
-
+        if(readSongDTO.getCreatedBy() != null) {
+            model.addAttribute("user", userService.findUserByUsername(readSongDTO.getCreatedBy()));
+        }
         model.addAttribute("song", readSongDTO);
         return "song/view";
     }

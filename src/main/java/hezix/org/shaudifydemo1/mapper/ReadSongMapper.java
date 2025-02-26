@@ -12,6 +12,7 @@ public class ReadSongMapper implements Mapper<ReadSongDTO, Song> {
                 .id(readSongDTO.getId())
                 .title(readSongDTO.getTitle())
                 .description(readSongDTO.getDescription())
+                .createdBy(readSongDTO.getCreatedBy())
                 .build();
     }
 
@@ -22,6 +23,7 @@ public class ReadSongMapper implements Mapper<ReadSongDTO, Song> {
                 .title(song.getTitle())
                 .description(song.getDescription())
                 .image(song.getImage())
+                .createdBy(song.getCreatedBy())
                 .song(song.getSong())
                 .build();
     }
