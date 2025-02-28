@@ -18,9 +18,9 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(CsrfConfigurer::disable)
-                .authorizeHttpRequests(request -> request.requestMatchers("/","song/**").authenticated()
-                        .requestMatchers("/error/**", "/register","/registration").permitAll()
-//                        .requestMatchers("/song/**").anonymous()
+                .authorizeHttpRequests(request -> request
+                        .requestMatchers("/error/**", "/register","/registration", "/css/**").permitAll()
+                        .requestMatchers("/","song/**").authenticated()
                         .requestMatchers("/user/**", "/api/**").hasRole("ADMIN"))
                 .formLogin(login -> login.loginPage("/login").defaultSuccessUrl("/", true).permitAll())
                 .exceptionHandling(exception -> exception.accessDeniedPage("/error/403"))
