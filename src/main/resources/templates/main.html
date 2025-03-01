@@ -13,15 +13,20 @@
 <h3>main page</h3>
 <h4>настолько плохо, что даже хорошо</h4>
 <div class="user-container">
-    <div th:if="${user.image != null}">
-        <span>аватар пользователя:</span>
-        <br>
-        <img th:src="${user.imageUrl}" alt="Cover Image" width="100"/>
+    <div th:if="${user.image != null}" class="user-info">
+        <img th:src="${user.imageUrl}" alt="Cover Image" class="avatar" />
+        <div class="user-description">
+            <span>коротко о пользователе:</span>
+            <p th:text="${user.description}">user description</p>
+        </div>
     </div>
     <div th:unless="${user.image != null}">
         <span>у пользователя нет аватара</span>
     </div>
     <h5 th:text=" 'пользователь: ' + ${user.username} + ', роль: ' + ${user.getRole()}"></h5>
+    <form action="/logout" method="post">
+        <button type="submit" class="button">выйти</button>
+    </form>
 </div>
 <hr>
 <div class="centering-container">
@@ -36,5 +41,10 @@
         <a href="/user/">посмотреть всех пользователей</a>
     </div>
 </div>
+<footer class="footer">
+    <div class="footer-container">
+        <a href="https://github.com/CJ-FromOhio/ShaudiFy">github</a>
+    </div>
+</footer>
 </body>
 </html>

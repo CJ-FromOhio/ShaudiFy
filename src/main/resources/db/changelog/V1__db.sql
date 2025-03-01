@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS users
     id BIGSERIAL primary key ,
     username varchar(32) not null unique,
     email varchar(96) not null unique,
-    password varchar(32) not null,
+    password varchar(255) not null,
     description varchar(255) ,
     role varchar(16),
     created_at timestamp not null,

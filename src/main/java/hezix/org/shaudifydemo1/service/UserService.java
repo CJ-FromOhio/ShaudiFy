@@ -24,6 +24,8 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +44,7 @@ public class UserService {
     private final ReadUserMapper readUserMapper;
     private final MinioService minioService;
     private final UserFileMapper userFileMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
     @Cacheable(value = "UserService::getById", key = "#id")
@@ -106,6 +109,7 @@ public class UserService {
     public ReadUserDTO save(CreateUserDTO createUserDTO) {
         if (createUserDTO.getPassword().equals(createUserDTO.getPasswordConfirmation())) {
             User user = userMapper.toEntity(createUserDTO);
+            user.setPassword(passwordEncoder.encode(createUserDTO.getPassword()));
             user.setRole(Role.ROLE_USER);
             user.setCreatedAt(LocalDateTime.now());
             userRepository.save(user);
