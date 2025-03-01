@@ -21,8 +21,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user = userService.findUserEntityByUsername(username);
-        return user.map(CustomUserDetail::new)
+        User user = userService.findUserEntityByUsername(username);
+        return Optional.ofNullable(user).map(CustomUserDetail::new)
                 .orElseThrow(() -> new EntityMappingException("dont cant map %s to customUserDetail".formatted(username)));
     }
 }

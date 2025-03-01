@@ -9,6 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
 <body>
+<h2>shaudiFy</h2>
+<h4>настолько плохо, что даже хорошо</h4>
 <div class="input-container">
     <form action="/login" method="post" >
 
@@ -20,8 +22,11 @@
         <label for="password">password</label>
         <input type="text" id="password" name="password" class="input-field">
 
-        <input type="submit" value="Create" class="button">
+        <input type="submit" value="Войти" class="button">
     </form>
+    <div class="button">
+        <a href="/register">Зарегестрироватсья</a>
+    </div>
 </div>
 <div th:if="${!param.isEmpty()}" th:each="error:${param}">
     <span style="color: red" th:text="${error.getValue()}">error field</span>

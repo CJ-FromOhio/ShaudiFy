@@ -9,10 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
 <body>
-<div class="button">
-    <a href="/">на главную страницу</a>
-</div>
-
+<h2>shaudiFy</h2>
+<h4>настолько плохо, что даже хорошо</h4>
 <div class="input-container">
     <form th:action="@{/registration}" th:method="POST" th:object="${user}" enctype="multipart/form-data">
 
@@ -50,9 +48,13 @@
 
         <input type="submit" value="Create" class="button">
     </form>
+    <div class="button">
+        <a href="/login">Войти в аккаунт</a>
+    </div>
+    <div th:if="${!errors.isEmpty()}" th:each="error:${errors}">
+        <span style="color: red" th:text="${error}">error field</span>
+    </div>
 </div>
-<div th:if="${!errors.isEmpty()}" th:each="error:${errors}">
-    <span style="color: red" th:text="${error}">error field</span>
-</div>
+
 </body>
 </html>

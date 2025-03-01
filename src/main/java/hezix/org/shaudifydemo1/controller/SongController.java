@@ -5,10 +5,14 @@ import hezix.org.shaudifydemo1.entity.song.dto.CreateSongDTO;
 import hezix.org.shaudifydemo1.entity.song.dto.ReadSongDTO;
 import hezix.org.shaudifydemo1.entity.song.dto.SongFileDTO;
 import hezix.org.shaudifydemo1.entity.song.dto.SongFormDTO;
+import hezix.org.shaudifydemo1.entity.user.User;
+import hezix.org.shaudifydemo1.mapper.SongMapper;
 import hezix.org.shaudifydemo1.service.SongService;
 import hezix.org.shaudifydemo1.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,6 +29,8 @@ public class SongController {
 
     private final SongService songService;
     private final UserService userService;
+    private final SongMapper songMapper;
+    private final User user;
 
     @GetMapping("/")
     public String getAll(Model model) {
@@ -55,7 +61,7 @@ public class SongController {
         return "song/create";
     }
     @PostMapping("/save")
-    public String createPage(@ModelAttribute @Valid SongFormDTO songFormDTO, BindingResult bindingResult, Model model) {
+    public String createPage(@ModelAttribute @Valid SongFormDTO songFormDTO, BindingResult bindingResult, Model model, @AuthenticationPrincipal UserDetails userDetails) {
         if (bindingResult.hasErrors()) {
             List<String> errors = new ArrayList<>();
             for (FieldError error : bindingResult.getFieldErrors()) {
@@ -65,7 +71,8 @@ public class SongController {
             model.addAttribute("song", songFormDTO);
             return "song/create";
         }
-        Song song = songService.save(songFormDTO.getCreateSongDTO());
+        Song song = songMapper.toEntity(songFormDTO.getCreateSongDTO());
+        songService.saveEntity(song, userDetails);
 
         if (songFormDTO.getSongFileDTO().getImage() != null && !songFormDTO.getSongFileDTO().getImage().isEmpty()) {
             songService.uploadImage(song.getId(), songFormDTO.getSongFileDTO());

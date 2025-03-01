@@ -67,8 +67,8 @@ public class UserService {
     }
     @Transactional(readOnly = true)
     @Cacheable(value = "UserService::getByUsername", key = "#username")
-    public Optional<User> findUserEntityByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public User findUserEntityByUsername(String username) {
+        return userRepository.findByUsername(username).orElseThrow(()->new EntityNotFoundException(""));
     }
 //    @Cacheable(value = "UserService::getByUsername", key = "#username")
     @Transactional(readOnly = true)

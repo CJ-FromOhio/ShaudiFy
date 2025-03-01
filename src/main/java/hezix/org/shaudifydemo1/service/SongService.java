@@ -2,6 +2,7 @@ package hezix.org.shaudifydemo1.service;
 
 import hezix.org.shaudifydemo1.entity.song.Song;
 import hezix.org.shaudifydemo1.entity.song.SongFile;
+import hezix.org.shaudifydemo1.entity.song.SongType;
 import hezix.org.shaudifydemo1.entity.song.dto.CreateSongDTO;
 import hezix.org.shaudifydemo1.entity.song.dto.ReadSongDTO;
 import hezix.org.shaudifydemo1.entity.song.dto.SongFileDTO;
@@ -18,6 +19,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,9 +40,18 @@ public class SongService {
     private final Random random;
 
     @Transactional
-//    @CacheEvict(value = "SongService::findById", key = "#createSongDTO.id")
-    public Song save(CreateSongDTO createSongDTO) {
+    @CacheEvict(value = "SongService::findById", key = "#createSongDTO.id")
+    public Song saveDto(CreateSongDTO createSongDTO) {
         Song song = songMapper.toEntity(createSongDTO);
+        return songRepository.save(song);
+    }
+    @Transactional
+    @CacheEvict(value = "SongService::findById", key = "#song.id")
+    public Song saveEntity(Song song, UserDetails userDetails) {
+        User user = userService.findUserEntityByUsername(userDetails.getUsername());
+        song.setType(SongType.DEFAULT);
+        song.setCreatedBy(userDetails.getUsername());
+        song.setUser(user);
         return songRepository.save(song);
     }
 

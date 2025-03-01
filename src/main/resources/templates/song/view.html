@@ -15,6 +15,10 @@
     <span th:text=" 'title: ' +  ${song.title}"></span>
     <br>
     <span th:text=" 'description: ' +  ${song.description}"></span>
+    <br>
+    <span>
+        <a th:href="@{/user/{id}(id=${user.id})}" th:text="'Профиль пользователя: ' + ${user.username}"></a>
+    </span>
 </div>
 
 <div th:if="${song.image != null}">

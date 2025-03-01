@@ -23,7 +23,7 @@
         <span> songs: </span>
         <br>
         <span th:each="song : ${user.authoredSongs}">
-            <a th:href="@{/song/{id}(id=${song.id})}" th:text="${song.title}">Song Title</a>
+          <a th:href="@{/song/{id}(id=${song.id})}" th:text="${song.title}">song Title</a>
         </span>
     </div>
     <div th:if="${user.image != null}">

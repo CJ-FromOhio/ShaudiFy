@@ -36,7 +36,7 @@ public class Song implements Serializable {
     private LocalDateTime createdAt;
     @Column(name = "created_by")
     private String createdBy;
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "author_id")
     @JsonBackReference
     private User user;

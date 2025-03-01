@@ -29,7 +29,7 @@ public class DemoRestSongController {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().body(bindingResult.getFieldError().getDefaultMessage());
         }
-        return ResponseEntity.ok().body(songService.save(createSongDTO));
+        return ResponseEntity.ok().body(songService.saveDto(createSongDTO));
     }
 
     @GetMapping("/{id}")

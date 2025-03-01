@@ -18,6 +18,9 @@
         <br>
         <img th:src="${user.imageUrl}" alt="Cover Image" width="100"/>
     </div>
+    <div th:unless="${user.image != null}">
+        <span>у пользователя нет аватара</span>
+    </div>
     <h5 th:text=" 'пользователь: ' + ${user.username} + ', роль: ' + ${user.getRole()}"></h5>
 </div>
 <hr>
