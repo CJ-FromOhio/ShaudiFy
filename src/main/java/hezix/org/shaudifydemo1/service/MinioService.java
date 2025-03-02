@@ -4,6 +4,7 @@ import hezix.org.shaudifydemo1.entity.song.SongFile;
 import hezix.org.shaudifydemo1.entity.user.UserFile;
 import hezix.org.shaudifydemo1.exception.UploadFileException;
 import hezix.org.shaudifydemo1.props.MinioProperties;
+import io.micrometer.core.annotation.Timed;
 import io.minio.*;
 import io.minio.http.Method;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class MinioService {
 
     private final MinioClient minioClient;
     private final MinioProperties minioProperties;
-
+    @Timed("minio_uploadSongImage")
     public String uploadSongImage(SongFile file) {
         try {
             createBucket(minioProperties.getImageBucket());
@@ -42,6 +43,7 @@ public class MinioService {
         saveImage(inputStream, fileName);
         return fileName;
     }
+    @Timed("minio_uploadUserImage")
     public String uploadUserImage(UserFile file) {
         try {
             createBucket(minioProperties.getImageBucket());
@@ -62,6 +64,7 @@ public class MinioService {
         saveImage(inputStream, fileName);
         return fileName;
     }
+    @Timed("minio_uploadSong")
     public String uploadSong(SongFile file) {
         try {
             createBucket(minioProperties.getSongBucket());

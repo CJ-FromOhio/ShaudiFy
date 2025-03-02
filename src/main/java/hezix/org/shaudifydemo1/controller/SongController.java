@@ -9,6 +9,8 @@ import hezix.org.shaudifydemo1.entity.user.User;
 import hezix.org.shaudifydemo1.mapper.SongMapper;
 import hezix.org.shaudifydemo1.service.SongService;
 import hezix.org.shaudifydemo1.service.UserService;
+import io.micrometer.core.annotation.Timed;
+import io.micrometer.core.annotation.TimedSet;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -30,13 +32,14 @@ public class SongController {
     private final SongService songService;
     private final UserService userService;
     private final SongMapper songMapper;
-    private final User user;
 
+    @Timed("songC_getAll")
     @GetMapping("/")
     public String getAll(Model model) {
         model.addAttribute("songs", songService.findAll());
         return "song/all";
     }
+    @Timed("songC_getById")
     @GetMapping("/{id}")
     public String getById(@PathVariable Long id, Model model) {
         ReadSongDTO readSongDTO = songService.findById(id);
@@ -46,12 +49,13 @@ public class SongController {
         model.addAttribute("song", readSongDTO);
         return "song/view";
     }
+    @Timed("songC_randomSong")
     @GetMapping("/randomSong")
     public String getRandomSong(Model model) {
         model.addAttribute("song", songService.findRandomSong());
         return "song/random";
     }
-
+    @Timed("songC_savePage")
     @GetMapping("/create")
     public String create(Model model) {
         SongFormDTO songFormDTO = new SongFormDTO();
@@ -60,6 +64,7 @@ public class SongController {
         model.addAttribute("song", songFormDTO);
         return "song/create";
     }
+    @Timed("songC_save")
     @PostMapping("/save")
     public String createPage(@ModelAttribute @Valid SongFormDTO songFormDTO, BindingResult bindingResult, Model model, @AuthenticationPrincipal UserDetails userDetails) {
         if (bindingResult.hasErrors()) {

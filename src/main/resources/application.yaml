@@ -27,6 +27,16 @@ minio:
   url: http://localhost:9000
   accessKey: minioadmin
   secretKey: minioadmin
+management:
+  endpoints.web.exposure.include: 'prometheus, health'
+  metrics:
+    distribution:
+      percentiles-histogram:
+        "[http.server.requests]": true
+  prometheus:
+    metrics:
+      export:
+        enabled: true
 
 
 

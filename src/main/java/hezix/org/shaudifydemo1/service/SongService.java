@@ -15,6 +15,7 @@ import hezix.org.shaudifydemo1.mapper.SongFileMapper;
 import hezix.org.shaudifydemo1.mapper.SongMapper;
 import hezix.org.shaudifydemo1.props.MinioProperties;
 import hezix.org.shaudifydemo1.repository.SongRepository;
+import io.micrometer.core.annotation.Timed;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -40,12 +41,14 @@ public class SongService {
     private final Random random;
 
     @Transactional
+    @Timed("songS_saveDto")
     @CacheEvict(value = "SongService::findById", key = "#createSongDTO.id")
     public Song saveDto(CreateSongDTO createSongDTO) {
         Song song = songMapper.toEntity(createSongDTO);
         return songRepository.save(song);
     }
     @Transactional
+    @Timed("songS_saveEntity")
     @CacheEvict(value = "SongService::findById", key = "#song.id")
     public Song saveEntity(Song song, UserDetails userDetails) {
         User user = userService.findUserEntityByUsername(userDetails.getUsername());
@@ -54,7 +57,7 @@ public class SongService {
         song.setUser(user);
         return songRepository.save(song);
     }
-
+    @Timed("songS_findAll")
     @Transactional(readOnly = true)
     public List<ReadSongDTO> findAll() {
         List<ReadSongDTO> songs = songRepository.findAll().stream()
@@ -72,7 +75,7 @@ public class SongService {
         }
         return songs;
     }
-
+    @Timed("songS_findById")
     @Transactional(readOnly = true)
     @Cacheable(value = "SongService::findById", key = "#id")
     public ReadSongDTO findById(Long id) {
@@ -89,28 +92,31 @@ public class SongService {
         }
         return readSongDTO;
     }
+    @Timed("songS_randomSong")
     @Transactional(readOnly = true)
     public ReadSongDTO findRandomSong(){
         List<ReadSongDTO> songs = findAll();
         int index = random.nextInt(songs.size());
         return songs.get(index);
     }
-
+    @Timed("songS_findImageById")
     @Transactional(readOnly = true)
     @Cacheable(value = "SongService::findImageById", key = "#id")
     public String findImageById(Long id) {
         return songRepository.findImageById(id).orElseThrow(() -> new EntityNotFoundException("Song image not found by id: " + id));
     }
+    @Timed("songS_findSongEntityById")
     @Transactional(readOnly = true)
     public Song findSongEntityById(Long id) {
         return songRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Song not found by id: " + id));
     }
+    @Timed("songS_delete")
     @Transactional
     @CacheEvict(value = "SongService::getById", key = "#id")
     public void delete(Long id) {
         songRepository.deleteById(id);
     }
-
+    @Timed("songS_assignSong")
     @Transactional
     public ReadUserDTO assignSong(Long songId, Long userId) {
         User user = userService.findUserEntityById(userId);
@@ -121,6 +127,7 @@ public class SongService {
         return readUserMapper.toDto(user);
     }
 //    @Cacheable(value = "SongService::findById", key = "#id")
+    @Timed("songS_uploadImage")
     @Transactional
     public void uploadImage(Long id, SongFileDTO songFileDTO) {
         SongFile imageFile = songFileMapper.toEntity(songFileDTO);
@@ -129,6 +136,7 @@ public class SongService {
         song.setImage(filename);
         songRepository.save(song);
     }
+    @Timed("songS_uploadSong")
     @Transactional
     public void uploadSong(Long id, SongFileDTO songFileDTO) {
         SongFile songFile = songFileMapper.toEntity(songFileDTO);

@@ -14,6 +14,7 @@ import hezix.org.shaudifydemo1.mapper.ReadUserMapper;
 import hezix.org.shaudifydemo1.mapper.UserFileMapper;
 import hezix.org.shaudifydemo1.mapper.UserMapper;
 import hezix.org.shaudifydemo1.repository.UserRepository;
+import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -39,7 +40,7 @@ public class UserService {
     private final MinioService minioService;
     private final UserFileMapper userFileMapper;
     private final PasswordEncoder passwordEncoder;
-
+    @Timed("userS_findById")
     @Transactional(readOnly = true)
     @Cacheable(value = "UserService::getById", key = "#id")
     public ReadUserDTO findUserById(Long id) {
@@ -57,17 +58,20 @@ public class UserService {
         }
         return readUserDTO;
     }
+    @Timed("userS_findEntityById")
     @Transactional(readOnly = true)
     public User findUserEntityById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User Entity not found by id: " + id));
     }
+    @Timed("userS_findEntityByUsername")
     @Transactional(readOnly = true)
     @Cacheable(value = "UserService::getByUsername", key = "#username")
     public User findUserEntityByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow(()->new EntityNotFoundException(""));
     }
 //    @Cacheable(value = "UserService::getByUsername", key = "#username")
+    @Timed("userS_findByUsername")
     @Transactional(readOnly = true)
     public ReadUserDTO findUserByUsername(String username) {
         User user = userRepository.findByUsername(username)
@@ -84,6 +88,7 @@ public class UserService {
         readUserDTO.setAuthoredSongs(songs);
         return readUserDTO;
     }
+    @Timed("userS_findAll")
     @Transactional(readOnly = true)
     public List<ReadUserDTO> findAllUsers() {
         List<ReadUserDTO> arr = userRepository.findAll()
@@ -98,7 +103,7 @@ public class UserService {
         }
         return arr;
     }
-
+    @Timed("userS_save")
     @Transactional
     public ReadUserDTO save(CreateUserDTO createUserDTO) {
         if (createUserDTO.getPassword().equals(createUserDTO.getPasswordConfirmation())) {
@@ -113,6 +118,7 @@ public class UserService {
             throw new PasswordAndPasswordConfirmationNotEquals("Password and password confirmation cannot be same");
         }
     }
+    @Timed("userS_update")
     @Transactional
     @Caching(put = {
             @CachePut(value = "UserService::getById", key = "#user.id"),
@@ -121,7 +127,7 @@ public class UserService {
     public User update(User user) {
         return userRepository.save(user);
     }
-
+    @Timed("userS_delete")
     @Transactional
     @CacheEvict(value = "UserService::getById", key = "#id")
     public void delete(Long id) {
@@ -131,6 +137,7 @@ public class UserService {
             throw new EntityNotFoundException("User for delete not found by id: " + id);
         }
     }
+    @Timed("userS_uploadImage")
     @Transactional
     public void uploadImage(Long id, UserFileDTO userFileDTO) {
         UserFile userFile = userFileMapper.toEntity(userFileDTO);

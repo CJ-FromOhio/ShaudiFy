@@ -1,6 +1,7 @@
 package hezix.org.shaudifydemo1.controller;
 
 import hezix.org.shaudifydemo1.service.UserService;
+import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class MainController {
 
     private final UserService userService;
-
+    @Timed("mainC_main")
     @GetMapping("/")
     public String main(@AuthenticationPrincipal UserDetails userDetails, Model model) {
         model.addAttribute("user", userService.findUserByUsername(userDetails.getUsername()));

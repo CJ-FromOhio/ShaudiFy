@@ -22,7 +22,7 @@ public class SecurityConfig {
         return http
                 .csrf(CsrfConfigurer::disable)
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/error/**", "/register","/registration", "/css/**").permitAll()
+                        .requestMatchers("/error/**", "/register","/registration", "/css/**", "/actuator/**").permitAll()
                         .requestMatchers("/","song/**").authenticated()
                         .requestMatchers(GET, "user/**").authenticated()
                         .requestMatchers("/user/**", "/api/**").hasRole("ADMIN"))

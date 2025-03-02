@@ -6,6 +6,7 @@ import hezix.org.shaudifydemo1.entity.user.dto.UserFileDTO;
 import hezix.org.shaudifydemo1.entity.user.dto.UserFormDTO;
 import hezix.org.shaudifydemo1.mapper.ReadUserMapper;
 import hezix.org.shaudifydemo1.service.UserService;
+import io.micrometer.core.annotation.Timed;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -26,11 +27,12 @@ public class AuthController {
 
     private final UserService userService;
     private final ReadUserMapper readUserMapper;
-
+    @Timed("authC_login")
     @GetMapping("/login")
     public String login() {
         return "auth/login";
     }
+    @Timed("authC_registrationPage")
     @GetMapping("/register")
     public String create(Model model) {
         UserFormDTO userFormDTO = new UserFormDTO();
@@ -39,6 +41,7 @@ public class AuthController {
         model.addAttribute("user", userFormDTO);
         return "auth/registry";
     }
+    @Timed("authC_registration")
     @PostMapping("/registration")
     public String registration(@ModelAttribute @Valid UserFormDTO userFormDTO, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {

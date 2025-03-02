@@ -1,15 +1,12 @@
 package hezix.org.shaudifydemo1.controller;
 
-import hezix.org.shaudifydemo1.entity.song.dto.CreateSongDTO;
-import hezix.org.shaudifydemo1.entity.song.dto.SongFileDTO;
-import hezix.org.shaudifydemo1.entity.song.dto.SongFormDTO;
 import hezix.org.shaudifydemo1.entity.user.User;
 import hezix.org.shaudifydemo1.entity.user.dto.CreateUserDTO;
-import hezix.org.shaudifydemo1.entity.user.dto.ReadUserDTO;
 import hezix.org.shaudifydemo1.entity.user.dto.UserFileDTO;
 import hezix.org.shaudifydemo1.entity.user.dto.UserFormDTO;
 import hezix.org.shaudifydemo1.mapper.ReadUserMapper;
 import hezix.org.shaudifydemo1.service.UserService;
+import io.micrometer.core.annotation.Timed;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -28,19 +25,19 @@ public class UserController {
 
     private final UserService userService;
     private final ReadUserMapper readUserMapper;
-
+    @Timed("userC_all")
     @GetMapping("/")
     public String all(Model model) {
         model.addAttribute("users", userService.findAllUsers());
         return "user/all";
     }
-
+    @Timed("userC_getById")
     @GetMapping("/{id}")
     public String getById(@PathVariable Long id, Model model) {
         model.addAttribute("user", userService.findUserById(id));
         return "user/view";
     }
-
+    @Timed("userC_savePage")
     @GetMapping("/create")
     public String create(Model model) {
         UserFormDTO userFormDTO = new UserFormDTO();
@@ -49,7 +46,7 @@ public class UserController {
         model.addAttribute("user", userFormDTO);
         return "user/create";
     }
-
+    @Timed("userC_save")
     @PostMapping("/save")
     public String createPage(@ModelAttribute @Valid UserFormDTO userFormDTO, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
