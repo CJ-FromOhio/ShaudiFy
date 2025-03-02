@@ -1,16 +1,12 @@
 package hezix.org.shaudifydemo1.service;
 
-import hezix.org.shaudifydemo1.entity.song.Song;
-import hezix.org.shaudifydemo1.entity.song.SongFile;
 import hezix.org.shaudifydemo1.entity.song.dto.ReadSongDTO;
-import hezix.org.shaudifydemo1.entity.song.dto.SongFileDTO;
 import hezix.org.shaudifydemo1.entity.user.Role;
 import hezix.org.shaudifydemo1.entity.user.User;
 import hezix.org.shaudifydemo1.entity.user.UserFile;
 import hezix.org.shaudifydemo1.entity.user.dto.CreateUserDTO;
 import hezix.org.shaudifydemo1.entity.user.dto.ReadUserDTO;
 import hezix.org.shaudifydemo1.entity.user.dto.UserFileDTO;
-import hezix.org.shaudifydemo1.entity.user.dto.UserFormDTO;
 import hezix.org.shaudifydemo1.exception.PasswordAndPasswordConfirmationNotEquals;
 import hezix.org.shaudifydemo1.exception.EntityNotFoundException;
 import hezix.org.shaudifydemo1.mapper.ReadSongMapper;
@@ -24,14 +20,12 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
