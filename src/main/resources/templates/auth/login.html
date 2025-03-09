@@ -14,15 +14,15 @@
 <div class="input-container">
     <form th:action="@{/login}" method="post" >
 
-        <label for="username">Username</label>
+        <label for="username"><span th:text="#{login.username}">Username</span></label>
         <input type="text" id="username" name="username" class="input-field">
 
         <br>
 
-        <label for="password">password</label>
+        <label for="password"><span th:text="#{login.password}">password</span></label>
         <input type="text" id="password" name="password" class="input-field">
 
-        <input type="submit" value="Войти" class="button">
+        <input type="submit" value="submit" class="button">
     </form>
     <div class="button">
         <a href="/register">Зарегестрироватсья</a>

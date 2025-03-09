@@ -16,6 +16,9 @@ spring:
     change-log: classpath:/db/changelog/db.changelog-master.yaml
   jpa:
     show-sql: true
+  messages:
+    basename: messages
+    encoding: UTF-8
 springdoc:
   api-docs:
     enabled: true
